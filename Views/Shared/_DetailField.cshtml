@@ -1,0 +1,67 @@
+﻿@using HelpDeskNet8.Models.ViewModels
+@model DetailFieldViewModel
+
+<div class="@Model.CssClass@(Model.Hidden ? " hidden" : "")">
+    <div class="left">
+        <label class="Name">@Model.Label</label>
+    </div>
+    <div class="right">
+        @switch (Model.FieldType)
+        {
+            case "label":
+                <label class="Value" id="@Model.FieldId">@Model.Value</label>
+                break;
+
+            case "textarea":
+                <textarea class="Value"
+                          id="@Model.FieldId"
+                @(Model.Required ? "required" : "")
+                @(Model.MaxLength.HasValue ? $"maxlength=\"{Model.MaxLength}\"" : "")
+                @(Model.Placeholder != null ? $"placeholder=\"{Model.Placeholder}\"" : "")
+                @(Model.OnChange != null ? $"onchange=\"{Model.OnChange}\"" : "")/>
+        break;
+
+            case "select":
+                <select class="Value"
+                        id="@Model.FieldId"
+                        @(Model.Required  ? "required"  : "")
+                        @(Model.Disabled  ? "disabled"  : "")
+                        @(Model.OnChange != null ? $"onchange=\"{Model.OnChange}\"" : "")>
+                    @foreach (var option in Model.Options)
+                    {
+                        <option value="@option.Value"
+                                selected="@option.Selected">
+                            @option.Label
+                        </option>
+                    }
+                </select>
+                break;
+
+            case "checkbox":
+                <input type="checkbox"
+                       class="Value"
+                       id="@Model.FieldId"
+                       @(Model.Disabled  ? "disabled"  : "")
+                       @(Model.OnChange != null ? $"onchange=\"{Model.OnChange}\"" : "") />
+                break;
+
+            case "date":
+                <input type="date"
+                       class="Value"
+                       id="@Model.FieldId"
+                       @(Model.Required  ? "required"  : "")
+                       @(Model.Disabled  ? "disabled"  : "")
+                       @(Model.OnChange != null ? $"onchange=\"{Model.OnChange}\"" : "") />
+                break;
+
+            default: @* input *@
+                <input class="Value"
+                       id="@Model.FieldId"
+                       @(Model.Required  ? "required"  : "")
+                       @(Model.Disabled  ? "disabled"  : "")
+                       @(Model.Placeholder != null ? $"placeholder=\"{Model.Placeholder}\"" : "")
+                       @(Model.OnChange != null ? $"onchange=\"{Model.OnChange}\"" : "") />
+                break;
+        }
+    </div>
+</div>

@@ -1,0 +1,44 @@
+﻿@using HelpDeskNet8.Models.Shared
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div id="Main-Div" class="main-section">
+    <div id="Error-Container">
+
+        <div id="Error-Header">
+            <h1>Something went wrong</h1>
+            <p>An unexpected error occurred. Please try again or contact your administrator.</p>
+        </div>
+
+        @if (Model.ShowRequestId)
+        {
+            <div id="Error-Reference">
+                <p>
+                    <strong>Reference ID:</strong>
+                    <code id="Request-Id">@Model.RequestId</code>
+                    <button type="button"
+                            id="Copy-Reference-Button"
+                            class="accept"
+                            onclick="navigator.clipboard.writeText(document.getElementById('Request-Id').innerText)">
+                        Copy
+                    </button>
+                </p>
+                <p class="error-hint">
+                    Please quote this reference ID when contacting support.
+                </p>
+            </div>
+        }
+
+        <div id="Error-Actions">
+            <a href="/" class="accept">Return to Home</a>
+            <button type="button"
+                    class="cancel"
+                    onclick="history.back()">
+                Go Back
+            </button>
+        </div>
+
+    </div>
+</div>

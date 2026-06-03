@@ -1,0 +1,163 @@
+﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Govtech HelpDesk</title>
+
+    @* -------------------------  CSS  ------------------------- *@
+    <link rel="stylesheet/less" type="text/css" href="~/css/Addons/PopupWindows.less" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/Addons/Cookie.css" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/css/Addons/Snow.css" asp-append-version="true" />
+    <link rel="stylesheet/less" type="text/css" href="~/css/Addons/NavAndFooter.less" asp-append-version="true" />
+    <link rel="stylesheet/less" type="text/css" href="~/css/Layout/Template.less" asp-append-version="true" />
+    <link rel="stylesheet" type="text/css" href="~/Fonts/Font.css" asp-append-version="true" />
+
+    @if (IsSectionDefined("AddCSSToHead"))
+    {
+        @RenderSection("AddCSSToHead", required: false)
+    }
+
+    @* -------------------------  External Libraries  ------------------------- *@
+    <script src="~/js/Addons/less.js" asp-append-version="true"></script>
+
+    @* -------------------------  Core JS  ------------------------- *@
+    <script src="~/js/Core/STORAGE_KEYS.js" asp-append-version="true"></script>
+    <script src="~/js/Core/API.js" asp-append-version="true"></script>
+    <script src="~/js/Core/UI.js" asp-append-version="true"></script>
+    <script src="~/js/Core/Auth.js" asp-append-version="true"></script>
+    <script src="~/js/Core/Layout.js" asp-append-version="true"></script>
+    <script src="~/js/Core/Navigation.js" asp-append-version="true"></script>
+    <script src="~/js/Core/Form.js" asp-append-version="true"></script>
+    <script src="~/js/Core/MessageBox.js" asp-append-version="true"></script>
+    <script src="~/js/Core/Cookie.js" asp-append-version="true"></script>
+    <script src="~/js/Core/CSRF.js" asp-append-version="true"></script>
+    <script src="~/js/Core/DragManager.js" asp-append-version="true"></script>
+    <script src="~/js/Core/Dropdowns.js" asp-append-version="true"></script>
+    <script src="~/js/Core/NavBar.js" asp-append-version="true"></script>
+
+    @* -------------------------  Components  ------------------------- *@
+    <script src="~/js/Components/Table/TableManager.js" asp-append-version="true"></script>
+    <script src="~/js/Components/Filters/FilterManager.js" asp-append-version="true"></script>
+    <script src="~/js/Components/Filters/FilterUI.js" asp-append-version="true"></script>
+    <script src="~/js/Components/Attachments/Attachments.js" asp-append-version="true"></script>
+    <script src="~/js/Components/History/History.js" asp-append-version="true"></script>
+    <script src="~/js/Components/Emails/Emails.js" asp-append-version="true"></script>
+
+    @* -------------------------  Pages  ------------------------- *@
+    <script src="~/js/Pages/PageBase.js" asp-append-version="true"></script>
+
+    @* -------------------------  Head JS (runs before body — use sparingly)  ------------------------- *@
+    @if (IsSectionDefined("AddJSToHead"))
+    {
+        @RenderSection("AddJSToHead", required: false)
+    }
+
+    @Html.Raw(JavaScriptSnippet.FullScript)
+</head>
+
+<body id="Main-Body">
+
+    @Html.AntiForgeryToken()
+
+    @* -------------------------  Nav Bar  ------------------------- *@
+    <nav class="Nav-Bar" id="nav">
+        <div id="navbar-menu">
+
+            @* --- Tickets --- *@
+            <div id="subnav-tickets" class="subnav">
+                <a id="TicketMenu">TICKETS</a>
+                <div id="subnav-tickets-content" class="subnav-content">
+                    <ul>
+                        <li><a id="AllTicketsMenu">View Tickets</a></li>
+                        <li><a id="CreateTicketMenu">Create Ticket</a></li>
+                        <li><a id="MyTicketMenu">My Tickets</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            @* --- Tasks --- *@
+            <div id="subnav-tasks" class="subnav">
+                <a id="TaskMenu">TASKS</a>
+                <div id="subnav-tasks-content" class="subnav-content">
+                    <ul>
+                        <li><a id="AllTasksMenu">View Tasks</a></li>
+                        <li><a id="MyTasksMenu">My Tasks</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            @* --- Users --- *@
+            <div id="subnav-users" class="subnav">
+                <a id="UserMenu">USERS</a>
+                <div id="subnav-users-content" class="subnav-content">
+                    <ul>
+                        <li><a id="AllUsersMenu">View Users</a></li>
+                        <li><a id="AddUserMenu">Create User</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            @* --- RFC --- *@
+            <div id="subnav-rfc" class="subnav">
+                <a id="RFCMenu">RFC</a>
+                <div id="subnav-rfc-content" class="subnav-content">
+                    <ul>
+                        <li><a id="AllRFCMenu">View RFC</a></li>
+                        <li><a id="CreateRFCMenu">Create RFC</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            @* --- Admin --- *@
+            <div id="subnav-admin" class="subnav">
+                <a id="AdminMenu">ADMIN</a>
+                <div id="subnav-admin-content" class="subnav-content">
+                    <ul>
+                        <li><a id="LoginMsgMenu">Login Msg</a></li>
+                        <li><a id="StatsMenu">Stats</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        @* --- Logout --- *@
+        <div id="navbar-logout">
+            <div id="subnav-logout" class="subnav">
+                <a id="Account-Name" class="hidden"></a>
+                <a id="Logout-button">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    @* -------------------------  Body  ------------------------- *@
+    @RenderBody()
+
+    @* -------------------------  Overlays  ------------------------- *@
+    <div id="Toggle-BlackBackground" class="BackgroundTint"></div>
+
+    <div id="MessageBox-ScreenCover-Div">
+        <div id="MessageBox-Outer-Div">
+            <div id="MessageBox-Div"></div>
+            <div id="Button-Div"></div>
+        </div>
+    </div>
+
+    <div id="PopupBox"></div>
+
+    @* -------------------------  Footer  ------------------------- *@
+    <footer class="footer">
+        <a>&copy; Govtech Solutions Ltd</a>
+    </footer>
+
+    @* -------------------------  Body JS (DOM ready — use for page scripts)  ------------------------- *@
+    @if (IsSectionDefined("AddJSToBody"))
+    {
+        @RenderSection("AddJSToBody", required: false)
+    }
+
+</body>
+</html>

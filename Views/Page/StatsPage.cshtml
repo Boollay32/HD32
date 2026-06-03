@@ -1,0 +1,89 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddJSToHead{
+    <script src="~/js/Pages/StatsPage.js" asp-append-version="true"></script>
+    @* Fix: webshims polyfill removed — obsolete — all modern browsers support date natively *@
+}
+
+@section AddCSSToHead{
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/Snow.css"         asp-append-version="true">
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/FilterBox.less"   asp-append-version="true">
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/TableLayout.less" asp-append-version="true">
+    <link rel="stylesheet/less" type="text/css" href="/css/Pages/StatsPage.less"    asp-append-version="true">
+}
+
+<div id="Main-Div" class="main-section">
+
+    @* Fix: onmouseover removed — handled in StatsPage.js *@
+    <div id="FilterTab">
+        @* Fix: <a> → <span> — not a link *@
+        <span>Filter</span>
+    </div>
+
+    <div id="Filter-Box">
+        <div id="Filter-Box-Header">
+            @* Fix: <a> → <span> — not a link *@
+            <span>Search Tickets</span>
+        </div>
+
+        <div id="Filter-Box-Body">
+            @* Fix: id="Filter-Div" → class — IDs must be unique *@
+            @* Fix: onclick removed — handled in StatsPage.js *@
+            <div class="Filter-Div">
+                <button class="FilterButton-Large accept Search" type="button"
+                        data-stat-type="1" data-stat-label="Open Calls - ">
+                    Number of open calls
+                </button>
+            </div>
+            <div class="Filter-Div">
+                <button class="FilterButton-Large accept Search" type="button"
+                        data-stat-type="2" data-stat-label="Open Calls DateRange - ">
+                    Number of open calls (date ranges)
+                </button>
+            </div>
+            <div class="Filter-Div">
+                <button class="FilterButton-Large accept Search" type="button"
+                        data-stat-type="3" data-stat-label="Closed or Resolved - ">
+                    Number of calls set to status of closed or resolved
+                </button>
+            </div>
+            <div class="Filter-Div">
+                <button class="FilterButton-Large accept Search" type="button"
+                        data-stat-type="4" data-stat-label="New Calls - ">
+                    Total number of new calls received
+                </button>
+            </div>
+            <div class="Filter-Div">
+                <button class="FilterButton-Large accept Search" type="button"
+                        data-stat-type="5" data-stat-label="Authority Calls - ">
+                    Number of calls by authority
+                </button>
+            </div>
+            <div class="Filter-Div">
+                <button class="FilterButton-Large accept Search" type="button"
+                        data-stat-type="6" data-stat-label="Category Calls - ">
+                    Number of calls in each category
+                </button>
+            </div>
+            <div class="Filter-Div">
+                @* Fix: onclick="" removed — Download Table wired in StatsPage.js *@
+                <button id="Download-Table-Button" class="FilterButton-Large cancel Search" type="button">
+                    Download Table
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @* Fix: onmouseover removed — handled in StatsPage.js *@
+    <div id="Table-Div-Outer">
+        <div id="Table-Div-Inner">
+            @* Fix: name attribute removed — not valid on table — style moved to CSS *@
+            <table id="Table" class="table-fill">
+                <thead id="Table-Header"><tr></tr></thead>
+                <tbody id="Table-Body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>

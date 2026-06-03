@@ -1,0 +1,113 @@
+﻿@using HelpDeskNet8.Models.ViewModels
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddJSToHead {
+    <script src="~/js/Pages/User/UserDetails.js" asp-append-version="true"></script>
+}
+
+@section AddCSSToHead {
+    <link rel="stylesheet/less" type="text/css" href="/css/Pages/UserDetails.less" asp-append-version="true" />
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/FormLayout.less" asp-append-version="true" />
+}
+
+<div id="Main-Div" class="main-section">
+    <div id="Detail-Container">
+
+        @* Fix: duplicate _DetailsHeader outside Main-Div removed *@
+        @await Html.PartialAsync("_DetailsHeader", new DetailsHeaderViewModel
+        {
+            EntityLabel = "User",
+            EntityIdElementId = "UserID",
+            Buttons = new List<HeaderButton>
+            {
+                new HeaderButton { Id = "UpdateUser-Button", Label = "Update User" },
+                new HeaderButton { Id = "DeleteUser-Button", Label = "Delete User" },
+                new HeaderButton { Id = "ResetUser-Button",  Label = "Reset User"  }
+            }
+        })
+
+        <div id="Detail-Body">
+            <form id="User-Form">
+                <div id="Detail-Inner">
+                    <div id="Details">
+
+                        @* --- Profile Header — kept as raw HTML — contains two labels side by side *@
+                        <div class="Group-Header">
+                            <div class="left">
+                                <label class="Value" id="UserName"></label>
+                                <label class="Name">- Profile Information</label>
+                            </div>
+                        </div>
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label = "Email",
+                            FieldId = "UserEmail",
+                            FieldType = "label"
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label = "Phone",
+                            FieldId = "UserPhone",
+                            FieldType = "input"
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label = "Authority",
+                            FieldId = "Authority",
+                            FieldType = "label"
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label = "Admin Level",
+                            FieldId = "AdminLevel",
+                            FieldType = "select",
+                            Options = new List<SelectOption>
+                            {
+                                new SelectOption { Value = "0", Label = "Authority User" },
+                                new SelectOption { Value = "3", Label = "TNS User" },
+                                new SelectOption { Value = "4", Label = "Govtech RFC User" },
+                                new SelectOption { Value = "1", Label = "Govtech User" },
+                                new SelectOption { Value = "5", Label = "Govtech TNS User" },
+                                new SelectOption { Value = "2", Label = "Govtech Admin User" }
+                            }
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label = "Locked",
+                            FieldId = "Locked",
+                            FieldType = "select",
+                            Options = new List<SelectOption>
+                            {
+                                new SelectOption { Value = "0", Label = "No" },
+                                new SelectOption { Value = "1", Label = "Yes" }
+                            }
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label = "Last Logged On",
+                            FieldId = "LastConnectionDate",
+                            FieldType = "label"
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label = "Active Account",
+                            FieldId = "Active-Account",
+                            FieldType = "label",
+                            Value = "Yes"
+                        })
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

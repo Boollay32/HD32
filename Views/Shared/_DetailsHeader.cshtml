@@ -1,0 +1,17 @@
+﻿@using HelpDeskNet8.Models.ViewModels
+@model DetailsHeaderViewModel
+
+<div id="Detail-Header">
+    <a>@Model.EntityLabel ID</a>
+    <a id="@Model.EntityIdElementId"></a>
+    <div id="header-buttons">
+        @foreach (var btn in Model.Buttons)
+        {
+            <button type="button"
+                    id="@btn.Id"
+                    class="@btn.CssClass@(btn.Hidden ? " hidden" : "")">
+                @btn.Label
+            </button>
+        }
+    </div>
+</div>

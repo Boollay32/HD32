@@ -1,0 +1,24 @@
+﻿@using HelpDeskNet8.Models.ViewModels
+@model ListPageViewModel
+
+@section AddJSToHead {
+    @if (!string.IsNullOrEmpty(Model.PageJs))
+    {
+        <script src="@Model.PageJs" asp-append-version="true"></script>
+    }
+}
+
+@section AddCSSToHead {
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/FilterBox.less" asp-append-version="true" />
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/TableLayout.less" asp-append-version="true" />
+    @if (!string.IsNullOrEmpty(Model.PageCss))
+    {
+        <link rel="stylesheet/less" type="text/css" href="@Model.PageCss" asp-append-version="true" />
+    }
+}
+
+<div class="page-container">
+    <div id="Note-Display"></div>
+    @await Html.PartialAsync("_FilterBox", Model.FilterBox)
+    <div id="Table"></div>
+</div>

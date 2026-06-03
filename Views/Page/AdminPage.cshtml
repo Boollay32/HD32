@@ -1,0 +1,150 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddJSToHead {
+    <script src="~/js/Pages/Admin/AdminPage.js" asp-append-version="true"></script>
+}
+
+@section AddCSSToHead {
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/FormLayout.less" asp-append-version="true" />
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/TableLayout.less" asp-append-version="true" />
+    <link rel="stylesheet/less" type="text/css" href="/css/Pages/Admin.less" asp-append-version="true" />
+}
+
+@* -------------------------  Body  ------------------------- *@
+<div id="Main-Div" class="main-section">
+    <div id="Detail-Container">
+
+        @* --- Header Buttons --- *@
+        <div id="Detail-Header">
+            <div id="header-buttons">
+                <button id="CreateBOR-Button" class="accept hidden" type="button">Create</button>
+                <button id="UpdateBugOrRequest-Button" class="accept hidden" type="button">Update Bug/Request</button>
+                <button id="UnlockUser-Button" class="accept hidden" type="button">Unlock User</button>
+                <button id="CreateUser-Button" class="accept hidden" type="button">Create User</button>
+                <button id="ResetUser-Button" class="accept hidden" type="button">Reset User</button>
+                <button id="UpdateLoginMessage-Button" class="accept hidden" type="button">Update Message</button>
+                <button id="HideLoginMessage-Button" class="accept hidden" type="button">Remove Message</button>
+            </div>
+        </div>
+
+        @* --- Body --- *@
+        <div id="Detail-Body">
+
+            @* -------------------------  Admin Nav  ------------------------- *@
+            <div id="Admin-Nav">
+                <button class="admin-nav-btn active" id="AdminNav-AddUser" type="button">Add User</button>
+                <button class="admin-nav-btn" id="AdminNav-ResetUser" type="button">Reset User</button>
+                <button class="admin-nav-btn" id="AdminNav-UnlockUser" type="button">Unlock User</button>
+                <button class="admin-nav-btn" id="AdminNav-LoginMessage" type="button">Login Message</button>
+                <button class="admin-nav-btn" id="AdminNav-Stats" type="button">Statistics</button>
+            </div>
+
+            @* --- Unlock User Panel --- *@
+            <div class="Admin-Panel" id="UnlockUser-Panel">
+                <div class="Table-Div-Inner">
+                    <table id="LockedUsers-table">
+                        @* Fix: onclick → Admin.js *@
+                        <thead id="LockedUsers-header">
+                            @* Fix: id="table-header" → unique *@
+                            <tr>
+                                <th class="text-center">User ID</th>      @* Fix: id on th — removed *@
+                                <th class="text-center">User Name</th>
+                                <th class="text-center">Authority</th>
+                                <th class="text-center">Unlock</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-hover locked-users-body" id="LockedUsers-body"></tbody>  @* Fix: style → CSS, unique id *@
+                    </table>
+                </div>
+            </div>
+                  
+
+            @* --- Add User Panel --- *@
+            <div class="Admin-Panel" id="AddUser-Panel">
+                <div class="Inner-Panel">
+                    <form id="NewUserForm">
+
+                        <div class="Detail-Div">
+                            <div class="left"><label for="LoginName">Login Name</label></div>
+                            <div class="right">
+                                @* Fix: id="value" duplicated × 4 — all given unique IDs *@
+                                @* Fix: Razor comment syntax broke email pattern — fixed *@
+                                <input type="email"
+                                       class="Value"
+                                       required
+                                       id="LoginName"
+                                       pattern="[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~.-]+@@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*" />
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div">
+                            <div class="left"><label for="FirstName">First Name</label></div>
+                            <div class="right">
+                                <input class="Value" required id="FirstName" />
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div">
+                            <div class="left"><label for="SecondName">Second Name</label></div>
+                            <div class="right">
+                                <input class="Value" id="SecondName" />
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div">
+                            <div class="left"><label for="PhoneNumber">Phone Number</label></div>
+                            <div class="right">
+                                <input class="Value" id="PhoneNumber" />
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div">
+                            <div class="left"><label for="Authority">Authority</label></div>
+                            <div class="right">
+                                <select class="Value" required id="Authority"></select>
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div">
+                            <div class="left"><label for="Department">Department</label></div>
+                            <div class="right">
+                                <select class="Value" required id="Department"></select>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+            @* --- Reset User Panel --- *@
+            <div class="Admin-Panel" id="ResetUser-Panel">
+                <div class="Inner-Panel">
+                    <div class="Detail-Div">
+                        <div class="left">
+                            <label for="UserLoginInput">Login Name</label>
+                        </div>
+                        <div class="right">
+                            <input class="Value" required id="UserLoginInput" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @* --- Update Login Message Panel --- *@
+            <div class="Admin-Panel" id="UpdateMessage-Panel">
+                <div class="Inner-Panel">
+                    <div class="Detail-Div">
+                        <div class="center">
+                            @* Fix: id="center" → class *@
+                            <p id="LoginMessageText">Update the login message for the login page.</p>  @* Fix: typo "Loging" → "Login" *@
+                            <textarea id="UpdateMessageText"></textarea>  @* Fix: id="UpdateMessage" → unique — clashes with div *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

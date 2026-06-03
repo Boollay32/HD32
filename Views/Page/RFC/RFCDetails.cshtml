@@ -1,0 +1,267 @@
+﻿@using HelpDeskNet8.Models.ViewModels
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddJSToHead {
+    <script src="~/js/Pages/RFC/RFCDetails.js" asp-append-version="true"></script>
+}
+
+@section AddCSSToHead {
+    <link rel="stylesheet/less" type="text/css" href="/css/Pages/Details.less"     asp-append-version="true" />
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/FormLayout.less" asp-append-version="true" />
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/Attachment.less" asp-append-version="true" />
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/NotesTable.less" asp-append-version="true" />
+}
+
+<div id="Main-Div" class="main-section"
+     
+     >
+
+    <div id="Detail-Container">
+
+        @* Fix: duplicate _DetailsHeader outside Main-Div removed *@
+        @await Html.PartialAsync("_DetailsHeader", new DetailsHeaderViewModel
+        {
+            EntityLabel       = "RFC",
+            EntityIdElementId = "RFCID",
+            Buttons = new List<HeaderButton>
+            {
+                new HeaderButton { Id = "Save-Button", Label = "Save" },
+                new HeaderButton { Id = "Back-Button", Label = "Back", Hidden = true }
+            }
+        })
+
+        <div id="Detail-Body">
+            <form id="UpdateRFC">
+                <div id="Detail-Inner">
+
+                    @* --- General Information --- *@
+                    <div id="Details">
+                        <div class="Group-Header">
+                            <div class="left">
+                                <label class="Name">General Information</label>
+                            </div>
+                        </div>
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Date Created",
+                            FieldId   = "changeRequestCreateDate",
+                            FieldType = "label",
+                            CssClass  = "Detail-Div full"
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Originator",
+                            FieldId   = "changeRequestOriginator",
+                            FieldType = "label",
+                            CssClass  = "Detail-Div full"
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Originator Email",
+                            FieldId   = "originatorEmail",
+                            FieldType = "label",
+                            CssClass  = "Detail-Div full"
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Title",
+                            FieldId   = "Title",
+                            FieldType = "textarea",
+                            Required  = true,
+                            MaxLength = 250,
+                            CssClass  = "Detail-Div full"
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Priority",
+                            FieldId   = "priority",
+                            FieldType = "select",
+                            Required  = true
+                            @* Fix: options populated dynamically by RFCDetails.js *@
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Description",
+                            FieldId   = "Description",
+                            FieldType = "textarea",
+                            Required  = true,
+                            MaxLength = 2000
+                        })
+
+                        @* --- Attachments — custom layout, not a _DetailField candidate --- *@
+                        <div class="Detail-Div full attachment-row">
+                            <div class="left">
+                                <label class="Name">Attachments</label>
+                                <div id="AttachBin"
+                                     ondrop="dropIt(event)"
+                                     >
+                                    <img draggable="false"
+                                         src="images/Bin.png"
+                                         class="bin-icon"
+                                         onmouseover="UI.showTooltip(this)"
+                                         onmouseout="UI.hideTooltip()"
+                                         tooltip="Attachment Bin" />
+                                </div>
+                            </div>
+                            <div id="CreateNoteAttachmentList"
+                                 name="MainNoteAttachHolder"
+                                 class="RFCAttachments">
+                            </div>
+                        </div>
+                    </div>
+
+                    @* --- Notes — group header kept, content dynamic --- *@
+                    <div id="Notes">
+                        <div class="Group-Header">
+                            <div class="left">
+                                <label class="Name">Notes</label>
+                                <button class="accept" type="button" id="NewNote-Button">+</button>
+                            </div>
+                        </div>
+                        <div class="Note-Div Detail-Div"></div>
+                    </div>
+
+                    @* --- Extended Information --- *@
+                    <div id="Extended-Information">
+                        <div class="Group-Header">
+                            <div class="left">
+                                <label class="Name">Extended Information</label>
+                            </div>
+                        </div>
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Approved By",
+                            FieldId   = "ApprovedBy",
+                            FieldType = "input"
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Approval Date",
+                            FieldId   = "ApprovalDate",
+                            FieldType = "date"
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Environment",
+                            FieldId   = "environment",
+                            FieldType = "select",
+                            Required  = true
+                            @* Fix: options populated dynamically by RFCDetails.js *@
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Affected Business Systems or Services",
+                            FieldId   = "AffectedBusinessSystemsOrServices",
+                            FieldType = "textarea",
+                            Required  = true,
+                            MaxLength = 2000
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Affected Customers",
+                            FieldId   = "AffectedCustomers",
+                            FieldType = "textarea",
+                            Required  = true,
+                            MaxLength = 250
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Business Justification",
+                            FieldId   = "BusinessJustification",
+                            FieldType = "textarea",
+                            Required  = true,
+                            MaxLength = 2000
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Risk Assessment",
+                            FieldId   = "RiskAssessment",
+                            FieldType = "textarea",
+                            Required  = true,
+                            MaxLength = 2000
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Impact Analysis",
+                            FieldId   = "ImpactAnalysis",
+                            FieldType = "textarea",
+                            Required  = true,
+                            MaxLength = 2000
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Information Security Considerations",
+                            FieldId   = "InformationSecurityConsiderations",
+                            FieldType = "textarea",
+                            Required  = true,
+                            MaxLength = 2000
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Status",
+                            FieldId   = "rfcStatus",
+                            FieldType = "select",
+                            Required  = true,
+                            OnChange  = "rfcPage.statusChange(this)"
+                            @* Fix: options populated dynamically by RFCDetails.js *@
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Assigned Tech",
+                            FieldId   = "assignedTechName",
+                            FieldType = "select"
+                            @* Fix: options populated dynamically by RFCDetails.js *@
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Assigned Email",
+                            FieldId   = "assignedTechEmail",
+                            FieldType = "input",
+                            Disabled  = true
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Target Date",
+                            FieldId   = "TargetDate",
+                            FieldType = "date",
+                            Required  = true
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label     = "Complete Date",
+                            FieldId   = "CompletedDate",
+                            FieldType = "date",
+                            Disabled  = true,
+                            Hidden    = true
+                        })
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("_NotePanel")

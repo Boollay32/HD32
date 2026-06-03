@@ -1,0 +1,34 @@
+﻿@model string  
+
+<div class="Detail-Div">
+    <div class="left">
+        <div id="@(Model)AttachBin"
+             ondrop="dropIt(event)"
+             
+             draggable="false">
+            <img src="images/Bin.png" class="bin-icon" />
+        </div>
+    </div>
+    <div id="@(Model)AttachmentList">
+        <div class="Attachment-Icon"
+             id="@(Model)-Attachment-Icon1"
+             draggable="true"
+             onmouseover="UI.showTooltip(this)"
+             onmouseout="UI.hideTooltip()"
+             tooltip="Add Attachment">
+            <div value="" class="File-ImageUnset" id="@(Model)-File-Image1">
+                <img src="images/PlusIcon.png" />
+            </div>
+            <input type="file"
+                   title=" "
+                   class="FileUP file-upload-input"
+                   name="Value"
+                   value="1"
+                   id="@(Model.ToLower())-fileupload1"
+                   
+                   
+                   onchange="GetByteArray('1',this)" />
+            <label id="@(Model)-Attach-Label" class="attach-label"></label>
+        </div>
+    </div>
+</div>

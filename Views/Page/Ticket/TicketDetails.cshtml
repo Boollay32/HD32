@@ -1,0 +1,484 @@
+﻿@using HelpDeskNet8.Models.ViewModels
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddJSToHead {
+    <script src="~/js/Components/CustomFields/CustomFieldBuilder.js" asp-append-version="true"></script>
+    <script src="~/js/Components/Notes/Notes.js" asp-append-version="true"></script>
+    <script src="~/js/Pages/Tasks/Tasks.js" asp-append-version="true"></script>
+    <script src="~/js/Components/Activity/Activity.js" asp-append-version="true"></script>
+    <script src="~/js/Pages/Ticket/TicketDetails.js" asp-append-version="true"></script>
+}
+
+@section AddCSSToHead {
+    <link rel="stylesheet/less" type="text/css" href="/css/Pages/TicketDetails.less" asp-append-version="true" />
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/Attachment.less" asp-append-version="true" />
+    <link rel="stylesheet/less" type="text/css" href="/css/Core/Variables.less" asp-append-version="true" />
+}
+
+<a href="#pane-left" class="skip-link">Skip to ticket content</a>
+
+<div class="td-app" id="TicketDetails-App">
+
+    <!-- ═══════════════════  TOPBAR  ═══════════════════ -->
+    <header class="td-topbar" role="banner" id="Detail-Header">
+
+        <button class="td-back" id="Back-Button" aria-label="Back to ticket list" type="button">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2.2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M15 18l-6-6 6-6" />
+            </svg>
+        </button>
+
+        <div class="td-id-block">
+            <span class="td-tid mono" id="TicketID"></span>
+            <h1 class="td-title" id="subject"></h1>
+        </div>
+
+        <div class="td-topbar-meta" id="Topbar-Meta">
+            <!-- populated by JS: status pill, priority, SLA -->
+            <div class="td-meta-pill" id="meta-status"></div>
+            <div class="td-meta-pill" id="meta-priority"></div>
+            <div class="td-meta-pill" id="meta-sla"></div>
+        </div>
+
+        <div class="td-spacer"></div>
+
+        <div class="td-topbar-actions" id="header-buttons">
+            <button type="button" class="td-btn-ghost hidden" id="FalseReply">
+                Hide Notification
+            </button>
+            <button type="button" class="td-btn-primary" id="Save-Button">
+                Save
+            </button>
+        </div>
+
+    </header>
+
+    <!-- ═══════════════════  SHELL  ═══════════════════ -->
+    <div class="td-shell" id="TD-Shell" role="main">
+
+        <!-- ── LEFT PANE (Messages) ── -->
+        <div class="td-pane td-pane--left" id="pane-left" aria-label="Messages">
+            <div class="td-rail" id="rail-left" aria-hidden="true" tabindex="-1">
+                <span class="td-rail-label">Messages</span>
+                <span class="td-rail-pip mono hidden" id="rail-left-pip"></span>
+            </div>
+            <div class="td-pane-inner" id="pane-left-inner">
+                <!-- ── Pane Header ── -->
+                <div class="td-pane-head">
+                    <h2 class="td-pane-title">Messages</h2>
+                    <span class="td-unread-badge hidden mono" id="msg-unread-badge"></span>
+                    <button class="td-collapse-btn" id="collapse-left"
+                            aria-label="Collapse messages pane"
+                            aria-expanded="true"
+                            aria-controls="pane-left"
+                            type="button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2.2"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M15 18l-6-6 6-6" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- ── Thread ── -->
+                <div class="td-thread" id="Messages-Thread" role="log" aria-live="polite" aria-label="Message thread">
+                    <!-- bubbles injected by MessagesPanel.js -->
+                </div>
+
+                <!-- ── Composer ── -->
+                <div class="td-composer-dock" id="Messages-Compose">
+
+                    <div class="td-composer" id="msg-composer-box">
+                        <textarea id="msg-textarea"
+                                  class="td-composer-input"
+                                  placeholder="Write a message…"
+                                  maxlength="2000"
+                                  rows="1"
+                                  aria-label="Message text"
+                                  aria-describedby="msg-charcount"></textarea>
+
+                        <button type="button" class="td-send-btn" id="msg-send-btn"
+                                aria-label="Send message" disabled>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2.2"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <line x1="22" y1="2" x2="11" y2="13" />
+                                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="td-composer-footer">
+                        <span class="td-charcount mono" id="msg-charcount" aria-live="polite">0 / 2000</span>
+
+                        <div class="td-composer-attachments" id="msg-attachment-list">
+                            <!-- attachment slots injected by JS -->
+                        </div>
+
+                        <label class="td-attach-btn" aria-label="Add attachment">
+                            <input type="file" id="msg-file-input" class="sr-only"
+                                   multiple accept="*/*"
+                                   aria-label="Attach file to message" />
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2.2"
+                                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48" />
+                            </svg>
+                        </label>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ── RIGHT PANE (Workspace) ── -->
+        <div class="td-pane td-pane--right" id="pane-right" aria-label="Workspace">
+            <div class="td-rail" id="rail-right" aria-hidden="true" tabindex="-1">
+                <span class="td-rail-label">Workspace</span>
+            </div>
+            <div class="td-pane-inner" id="pane-right-inner">
+                <!-- ── Pane Header ── -->
+                <div class="td-pane-head">
+                    <h2 class="td-pane-title">Workspace</h2>
+                    <button class="td-collapse-btn" id="collapse-right"
+                            aria-label="Collapse workspace pane"
+                            aria-expanded="true"
+                            aria-controls="pane-right"
+                            type="button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2.2"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M9 18l6-6-6-6" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- ── Tabs ── -->
+                <div class="td-ws-tabs" role="tablist" aria-label="Workspace sections">
+
+                    <button role="tab" id="tab-notes" aria-selected="true"
+                            aria-controls="tabpanel-notes" type="button">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2.2"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                        </svg>
+                        Notes
+                        <span class="td-tab-pip mono hidden" id="notes-pip"></span>
+                    </button>
+
+                    <button role="tab" id="tab-tasks" aria-selected="false"
+                            aria-controls="tabpanel-tasks" type="button">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2.2"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="9 11 12 14 22 4" />
+                            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                        </svg>
+                        Tasks
+                        <span class="td-tab-pip mono hidden" id="tasks-pip"></span>
+                    </button>
+
+                    <button role="tab" id="tab-details" aria-selected="false"
+                            aria-controls="tabpanel-details" type="button">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2.2"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                        Details
+                    </button>
+
+                    <button role="tab" id="tab-activity" aria-selected="false"
+                            aria-controls="tabpanel-activity" type="button">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2.2"
+                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                        </svg>
+                        Activity
+                    </button>
+
+                </div>
+
+                <!-- ── Tab Panels ── -->
+                <div class="td-ws-body">
+
+                    <!-- NOTES -->
+                    <div role="tabpanel" id="tabpanel-notes"
+                         aria-labelledby="tab-notes"
+                         class="td-ws-inner" hidden>
+
+                        <!-- scope banner — id required by Notes.js Dom.scopeNote() -->
+                        <div class="td-scope-note" id="note-scope-banner" hidden>
+                            <span class="td-lock-icon" aria-hidden="true">🔒</span>
+                            Internal only — not visible to client
+                        </div>
+
+                        <div class="td-note-thread" id="Notes-Thread" role="log"
+                             aria-live="polite" aria-label="Internal notes">
+                        </div>
+
+                        <!-- compose dock — id required by Notes.js Dom.composeDock() -->
+                        <div class="td-note-compose" id="Notes-Compose">
+                            <textarea id="note-textarea"
+                                      class="td-note-input"
+                                      placeholder="Add an internal note…"
+                                      maxlength="2000"
+                                      rows="1"
+                                      aria-label="Note text"
+                                      aria-describedby="note-charcount"></textarea>
+
+                            <button type="button" class="td-note-add-btn" id="note-send-btn"
+                                    aria-label="Save note" disabled>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2.2"
+                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <line x1="12" y1="5" x2="12" y2="19" />
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div class="td-composer-footer">
+                            <span class="td-charcount mono" id="note-charcount" aria-live="polite">0 / 2000</span>
+                            <div class="td-composer-attachments" id="note-attachment-list"></div>
+                            <label class="td-attach-btn" aria-label="Add attachment to note">
+                                <input type="file" id="note-file-input" class="sr-only"
+                                       multiple accept="*/*"
+                                       aria-label="Attach file to note" />
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2.2"
+                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66L9.41 17.41a2 2 0 01-2.83-2.83l8.49-8.48" />
+                                </svg>
+                            </label>
+                            <button type="button" class="td-visibility-btn hidden"
+                                    id="note-visibility-btn"
+                                    aria-label="Toggle client visibility"
+                                    aria-pressed="false">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2.2"
+                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <!-- TASKS -->
+                    <div role="tabpanel" id="tabpanel-tasks"
+                         aria-labelledby="tab-tasks"
+                         class="td-ws-inner" hidden>
+
+                        <div class="td-progress-track" id="task-progress-track" aria-hidden="true">
+                            <div class="td-progress-fill" id="task-progress-fill"
+                                 role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                 style="width:0%"></div>
+                        </div>
+                        <p class="td-progress-label" id="task-progress-label"></p>
+
+                        <div class="td-task-list" id="Task-List" aria-label="Task list">
+                            <!-- tasks injected by Tasks.js -->
+                        </div>
+
+                        <div class="td-add-task">
+                            <button type="button" class="td-btn-ghost" id="add-task-btn">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2.2"
+                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <line x1="12" y1="5" x2="12" y2="19" />
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg>
+                                Add Task
+                            </button>
+                        </div>
+
+                        <!-- Task overlay -->
+                        <div class="td-overlay" id="task-overlay" hidden>
+                            <div class="td-overlay-panel" role="dialog"
+                                 aria-modal="true" aria-labelledby="task-overlay-title">
+                                <div class="td-overlay-head">
+                                    <h3 id="task-overlay-title">Add Task</h3>
+                                    <button type="button" class="td-overlay-close"
+                                            id="task-overlay-close" aria-label="Close">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                             stroke="currentColor" stroke-width="2.5"
+                                             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <line x1="18" y1="6" x2="6" y2="18" />
+                                            <line x1="6" y1="6" x2="18" y2="18" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                <form id="task-overlay-form" novalidate>
+                                    <div class="td-form-field">
+                                        <label for="task-title-input">Title <span aria-hidden="true">*</span></label>
+                                        <input type="text" id="task-title-input"
+                                               class="td-input" required
+                                               placeholder="Task title…"
+                                               autocomplete="off" />
+                                    </div>
+                                    <div class="td-form-field">
+                                        <label for="task-assignee">Assignee</label>
+                                        <select id="task-assignee" class="td-select">
+                                            <option value="">Unassigned</option>
+                                        </select>
+                                    </div>
+                                    <div class="td-form-field">
+                                        <label for="task-due-date">Due Date</label>
+                                        <input type="date" id="task-due-date" class="td-input" />
+                                    </div>
+                                    <div class="td-form-field">
+                                        <label for="task-priority">Priority</label>
+                                        <select id="task-priority" class="td-select">
+                                            <option value="1">Low</option>
+                                            <option value="2" selected>Medium</option>
+                                            <option value="3">High</option>
+                                        </select>
+                                    </div>
+                                    <div class="td-overlay-actions">
+                                        <button type="button" class="td-btn-ghost"
+                                                id="task-cancel-btn">
+                                            Cancel
+                                        </button>
+                                        <button type="submit" class="td-btn-primary"
+                                                id="task-save-btn">
+                                            Save Task
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- DETAILS -->
+                    <div role="tabpanel" id="tabpanel-details"
+                         aria-labelledby="tab-details"
+                         class="td-ws-inner" hidden>
+
+                        <!-- Group: People -->
+                        <div class="td-field-group">
+                            <h3 class="td-grp-head">People</h3>
+                            <dl class="td-dl">
+                                <div class="td-field">
+                                    <dt>Raised By</dt>
+                                    <dd><label class="Field-Value" id="raisedby"></label></dd>
+                                </div>
+                                <div class="td-field">
+                                    <dt>Assigned Tech</dt>
+                                    <dd>
+                                        <select id="assignedtech" class="td-select"
+                                                aria-label="Assigned technician"></select>
+                                    </dd>
+                                </div>
+                                <div class="td-field">
+                                    <dt>Authority</dt>
+                                    <dd><label class="Field-Value" id="authority"></label></dd>
+                                </div>
+                            </dl>
+                        </div>
+
+                        <!-- Group: Classification -->
+                        <div class="td-field-group">
+                            <h3 class="td-grp-head">Classification</h3>
+                            <dl class="td-dl">
+                                <div class="td-field">
+                                    <dt>Request Type</dt>
+                                    <dd><label class="Field-Value" id="requesttype"></label></dd>
+                                </div>
+                                <div class="td-field">
+                                    <dt>Category</dt>
+                                    <dd>
+                                        <select id="category" class="td-select"
+                                                aria-label="Category"></select>
+                                    </dd>
+                                </div>
+                                <div class="td-field">
+                                    <dt>Sub Category</dt>
+                                    <dd>
+                                        <select id="subcategory" class="td-select"
+                                                aria-label="Sub category"></select>
+                                    </dd>
+                                </div>
+                                <div class="td-field">
+                                    <dt>Priority</dt>
+                                    <dd>
+                                        <select id="priority" class="td-select"
+                                                aria-label="Priority"></select>
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+
+                        <!-- Group: Dates -->
+                        <div class="td-field-group">
+                            <h3 class="td-grp-head">Dates</h3>
+                            <dl class="td-dl">
+                                <div class="td-field">
+                                    <dt>Created</dt>
+                                    <dd><label class="Field-Value mono" id="created"></label></dd>
+                                </div>
+                                <div class="td-field">
+                                    <dt>Target Date</dt>
+                                    <dd>
+                                        <input type="date" id="targetdate" class="td-input"
+                                               aria-label="Target date" />
+                                    </dd>
+                                </div>
+                                <div class="td-field">
+                                    <dt>Closed</dt>
+                                    <dd><label class="Field-Value mono" id="closed"></label></dd>
+                                </div>
+                            </dl>
+                        </div>
+
+                        <!-- Group: Custom Fields -->
+                        <div class="td-field-group" id="CustomFields-Group">
+                            <h3 class="td-grp-head">Additional Info</h3>
+                            <dl class="td-dl" id="CustomFields-Container">
+                                <!-- injected by CustomFieldBuilder.js -->
+                            </dl>
+                        </div>
+
+                    </div>
+
+                    <!-- ACTIVITY -->
+                    <div role="tabpanel" id="tabpanel-activity"
+                         aria-labelledby="tab-activity"
+                         class="td-ws-inner" hidden>
+
+                        <div class="td-act-filters" role="group" aria-label="Filter activity">
+                            <button type="button" class="td-chip" aria-pressed="true" data-filter="all">All</button>
+                            <button type="button" class="td-chip" aria-pressed="false" data-filter="status">Status</button>
+                            <button type="button" class="td-chip" aria-pressed="false" data-filter="assign">Assigned</button>
+                            <button type="button" class="td-chip" aria-pressed="false" data-filter="note">Notes</button>
+                            <button type="button" class="td-chip" aria-pressed="false" data-filter="task">Tasks</button>
+                        </div>
+
+                        <ul class="td-timeline" id="Activity-List" aria-label="Ticket activity">
+                            <!-- injected by GetHistory -->
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+</div>

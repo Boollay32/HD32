@@ -1,0 +1,48 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddCSSToHead {
+    <link rel="stylesheet/less" type="text/css" href="~/css/Pages/RFC.less" asp-append-version="true" />
+    <link rel="stylesheet/less" type="text/css" href="~/css/Addons/TableLayout.less" asp-append-version="true" />
+    <link rel="stylesheet/less" type="text/css" href="~/css/Addons/FilterBox.less" asp-append-version="true" />
+    <link rel="stylesheet/less" type="text/css" href="~/css/Addons/Attachment.less" asp-append-version="true" />
+}
+
+@section AddJSToBody {
+    <script src="~/js/Pages/TablePage.js" asp-append-version="true"></script>
+}
+
+<div id="Main-Div" class="main-section">
+
+    <div id="DisplayImage"></div>
+
+    <div id="FilterTab">
+        <span>Filter</span>
+    </div>
+
+    <div id="Filter-Box">
+        <div id="Filter-Box-Header">
+            <span>Search</span>
+        </div>
+
+        <div id="Filter-Box-Body"></div>
+
+        <div id="filter-buttons">
+            <button id="Search-Button-Filter" class="FilterButton-Small accept" type="button">Search</button>
+            <button id="Clear-Button-Filter" class="FilterButton-Small accept" type="button">Clear</button>
+            <div id="ListCountOuterDiv">
+                <p id="TotalRowsCount"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="Table-Div-Outer">
+        <div id="Table-Div-Inner">
+            <table id="Table" class="table-fill">
+                <thead id="Table-Header"><tr></tr></thead>
+                <tbody id="Table-Body"></tbody>
+            </table>
+        </div>
+    </div>
+</div>

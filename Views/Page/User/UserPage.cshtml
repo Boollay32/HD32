@@ -1,0 +1,15 @@
+﻿@using HelpDeskNet8.Models.ViewModels
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var model = new ListPageViewModel
+    {
+        FilterBox = FilterBoxViewModel.ForUsers()
+    };
+}
+
+@section AddJSToBody {
+    <script src="~/js/Pages/User/UserPage.js" asp-append-version="true"></script>
+}
+
+@await Html.PartialAsync("_ListPage", model)

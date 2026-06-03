@@ -1,0 +1,110 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddCSSToHead {
+    <link rel="stylesheet/less" type="text/css" href="/css/Pages/CreateForm.less" asp-append-version="true">
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/Snow.css" asp-append-version="true">
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/PopupWindows.less" asp-append-version="true">
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/NotesTable.less" asp-append-version="true">
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/FormLayout.less" asp-append-version="true">
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/Attachment.less" asp-append-version="true">
+}
+
+@section AddJSToHead {
+    <script src="~/js/Pages/Ticket/CreateTicket.js" asp-append-version="true"></script>
+}
+
+<div id="Main-Div" class="main-section">
+    <div id="Detail-Container">
+        <div id="Detail-Header">
+            @* Fix: empty <a> removed *@
+            <div id="header-buttons">
+                @* Fix: onclick removed — handled in CreateTicket.js *@
+                <button type="button" id="SubmitCreatedTicket" class="accept">Submit</button>
+            </div>
+        </div>
+
+        <div id="Detail-Body">
+            <form id="create-ticket">
+                <div id="Detail-Inner">
+                    <div id="Details">
+
+                        <div id="Group-Header">
+                            <div class="left">
+                                @* Fix: missing space before class *@
+                                <label id="GTI" class="Name">General Ticket Information</label>
+                            </div>
+                        </div>
+
+                        @* Request Type *@
+                        @* Fix: id="Detail-Div", id="left", id="right" → classes — were duplicated *@
+                        <div class="Detail-Div full">
+                            <div class="left">
+                                <label class="Name">Request Type</label>
+                            </div>
+                            <div class="right">
+                                @* Fix: onchange removed — handled in CreateTicket.js *@
+                                <select required id="requestType" class="Value"></select>
+                            </div>
+                        </div>
+
+                        @* Subject *@
+                        <div class="Detail-Div full">
+                            <div class="left">
+                                <label class="Name" for="subject">Subject</label>
+                            </div>
+                            <div class="right">
+                                <input required id="subject" class="Value" type="text">
+                            </div>
+                        </div>
+
+                        @* Description *@
+                        <div class="Detail-Div full">
+                            <div class="left">
+                                <label class="Name" for="requestDetail">Description</label>
+                            </div>
+                            <div class="right">
+                                @* Fix: inline style + onkeydown removed — moved to CSS/JS *@
+                                <textarea required id="requestDetail" class="Value"></textarea>
+                            </div>
+                        </div>
+
+                        @* Attachments *@
+                        @* Fix: inline style height:80px — moved to CSS *@
+                        <div class="Detail-Div full attachment-row">
+                            <div class="left">
+                                <label class="Name">Attachments</label>
+                                @* Fix: ondrop removed — handled in Attachments.js *@
+                                <div id="AttachBin">
+                                    @* Fix: inline style — moved to CSS *@
+                                    <img src="images/Bin.png" class="attach-bin-icon" />
+                                </div>
+                            </div>
+                            <div id="CreateNoteAttachmentList" name="MainNoteAttachHolder">
+                                <div class="Attachment-Icon" id="Attachment-Icon1" draggable="true">
+                                    <div value="" class="File-ImageUnset" id="File-Image1">
+                                        <img src="images/PlusIcon.png">
+                                    </div>
+                                    @* Fix: inline style opacity:0 — moved to CSS *@
+                                    @* Fix: onchange removed — handled in Attachments.js *@
+                                    <input type="file" title=" " class="FileUP"
+                                           name="Value" value="1" id="fileupload1">
+                                    @* Fix: inline style padding — moved to CSS *@
+                                    <label id="Attach-Label" class="attach-label"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        @* Fix: commented out Status/Priority/Category blocks removed — dead code *@
+
+                        <div id="Custom-fields"></div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="Display-Div"></div>

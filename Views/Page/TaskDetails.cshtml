@@ -1,0 +1,167 @@
+﻿@using HelpDeskNet8.Models.ViewModels
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddJSToHead {
+    <script src="~/js/Pages/Tasks/TasksPage.js" asp-append-version="true"></script>
+}
+
+@section AddCSSToHead {
+    <link rel="stylesheet/less" type="text/css" href="/css/Pages/Details.less" asp-append-version="true" />
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/FormLayout.less" asp-append-version="true" />
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/Attachment.less" asp-append-version="true" />
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/NotesTable.less" asp-append-version="true" />
+}
+
+<div id="Main-Div" class="main-section">
+
+    <div id="DisplayImage"></div>
+
+    <div id="Detail-Container">
+
+        @await Html.PartialAsync("_DetailsHeader", new DetailsHeaderViewModel
+        {
+            EntityLabel = "Task",
+            EntityIdElementId = "TaskID",
+            Buttons = new List<HeaderButton>
+            {
+                new HeaderButton { Id = "Save-Button", Label = "Save" }
+            }
+        })
+
+        <div id="Detail-Body">
+            <form id="UpdateTask">
+                <div id="Detail-Inner">
+                    <div id="Details">
+
+                        @* --- General Information --- *@
+                        <div class="Group-Header">
+                            <div class="left">
+                                <label class="Name">General Information</label>
+                            </div>
+                        </div>
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label = "Task ID",
+                            FieldId = "TaskID",
+                            FieldType = "label",
+                            CssClass = "Detail-Div full"
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label = "Ticket ID",
+                            FieldId = "TicketID",
+                            FieldType = "label",
+                            CssClass = "Detail-Div full"
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label = "Title",
+                            FieldId = "Title",
+                            FieldType = "textarea",
+                            Required = true,
+                            MaxLength = 250,
+                            CssClass = "Detail-Div full"
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label = "Description",
+                            FieldId = "Description",
+                            FieldType = "textarea",
+                            Required = true,
+                            MaxLength = 2000
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label = "Progress Log",
+                            FieldId = "ProgressLog",
+                            FieldType = "textarea",
+                            MaxLength = 2000
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label = "Assigned Tech",
+                            FieldId = "AssignedTech",
+                            FieldType = "select"
+                            @* Fix: options populated dynamically by TaskDetails.js *@
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label = "Status",
+                            FieldId = "taskStatus",
+                            FieldType = "select",
+                            Required = true,
+                            Options = new List<SelectOption>
+                            {
+                                new SelectOption { Value = "1", Label = "New" },
+                                new SelectOption { Value = "2", Label = "In Progress" },
+                                new SelectOption { Value = "3", Label = "Complete" },
+                                new SelectOption { Value = "4", Label = "Withdrawn" },
+                                new SelectOption { Value = "5", Label = "Draft" }
+                            }
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label = "Important",
+                            FieldId = "Important",
+                            FieldType = "checkbox"
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label = "Required By Date",
+                            FieldId = "RequiredDate",
+                            FieldType = "date",
+                            Required = true
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label = "Created",
+                            FieldId = "Created",
+                            FieldType = "label"
+                        })
+
+                        @await Html.PartialAsync("_DetailField", new DetailFieldViewModel
+                        {
+                            Label = "Completed",
+                            FieldId = "Completed",
+                            FieldType = "date",
+                            Disabled = true
+                        })
+
+                        @* --- Attachments — custom layout, not a _DetailField candidate --- *@
+                        <div class="Detail-Div full attachment-row">
+                            <div class="left">
+                                <label class="Name">Attachments</label>
+                                <div id="AttachBin"
+                                     ondrop="dropIt(event)"
+                                     >
+                                    <img draggable="false"
+                                         src="images/Bin.png"
+                                         class="bin-icon"
+                                         onmouseover="UI.showTooltip(this)"
+                                         onmouseout="UI.hideTooltip()"
+                                         tooltip="Attachment Bin" />
+                                </div>
+                            </div>
+                            <div id="TaskAttachmentList" class="RFCAttachments"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("_NotePanel")

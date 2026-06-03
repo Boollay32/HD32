@@ -1,0 +1,451 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    @* Fix: unused var pagename removed *@
+}
+
+@section AddCSSToHead {
+    @* Fix: Snow.css moved here from AddJSToHead *@
+    <link rel="stylesheet/less" type="text/css" href="/css/Pages/Details.less" asp-append-version="true">
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/Snow.css" asp-append-version="true">
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/PopupWindows.less" asp-append-version="true">
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/FormLayout.less" asp-append-version="true">
+    <link rel="stylesheet/less" type="text/css" href="/css/Addons/Attachment.less" asp-append-version="true">
+}
+
+@section AddJSToHead {   
+    <script src="/js/Pages/TicketDetail.js" asp-append-version="true"></script>
+    <script src="/js/Addons/Attachments.js" asp-append-version="true"></script>
+    <script src="/js/Addons/Emails.js" asp-append-version="true"></script>
+    <script src="/js/Addons/History.js" asp-append-version="true"></script>
+    <script src="/js/Addons/DetailsPage.js" asp-append-version="true"></script>
+    <script src="/js/Addons/Tasks.js" asp-append-version="true"></script>
+}
+
+<div id="Main-Div" class="main-section">
+
+    <div id="DisplayImage"></div>
+
+    <div id="Detail-Container">
+        <div id="Detail-Header">
+            @* Fix: <a> used as plain text — replaced with <span> *@
+            <span>Ticket ID</span>
+            <span id="TicketID"></span>
+            <div id="header-buttons">
+                @* Fix: inline style display:none — moved to CSS class *@
+                @* Fix: onclick removed — handled in TicketDetail.js *@
+                <button id="FalseReply" class="accept hidden" value="false">Hide Notification</button>
+                @* Fix: onclick removed — handled in TicketDetail.js *@
+                <button id="Save-Button" class="accept">Save</button>
+            </div>
+        </div>
+
+        <div id="Detail-Body">
+            <form id="UpdateTicket">
+                <div id="Detail-Inner">
+
+                    @* Fix: hidden submit button — display:none inline style moved to CSS *@
+                    <button id="Submit-Button" class="hidden" type="submit"></button>
+
+                    @* -------------------------  General Information  ------------------------- *@
+                    <div id="Details">
+                        <div id="Group-Header">
+                            <div class="left">
+                                <label class="Name">General Information</label>
+                            </div>
+                        </div>
+
+                        @* Fix: id="Detail-Div/left/right" → classes throughout *@
+                        <div class="Detail-Div full">
+                            <div class="left">
+                                <label class="Name">Open Date</label>
+                            </div>
+                            <div class="right">
+                                <label readonly="readonly" class="Value" id="created"></label>
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div full">
+                            <div class="left">
+                                <label class="Name">1st Response Date</label>
+                            </div>
+                            <div class="right">
+                                <label readonly="readonly" class="Value" id="firstResponseDate"></label>
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div full">
+                            <div class="left">
+                                <label class="Name">Last Update</label>
+                            </div>
+                            <div class="right">
+                                <label readonly="readonly" class="Value" id="updated"></label>
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div full">
+                            <div class="left">
+                                <label class="Name">Close Date</label>
+                            </div>
+                            <div class="right">
+                                <label readonly="readonly" class="Value" id="closeDate"></label>
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div full">
+                            <div class="left">
+                                <label class="Name">Created By</label>
+                            </div>
+                            <div class="right">
+                                <label readonly="readonly" class="Value" id="userName"></label>
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div full">
+                            <div class="left">
+                                <label class="Name">Authority</label>
+                            </div>
+                            <div class="right">
+                                <label readonly="readonly" class="Value" id="authorityName"></label>
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div full">
+                            <div class="left">
+                                <label class="Name">Assigned Tech</label>
+                            </div>
+                            <div class="right">
+                                <select disabled="disabled" class="Value" id="assignedTechName"></select>
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div full">
+                            <div class="left">
+                                <label class="Name">Assigned Tech Email</label>
+                            </div>
+                            <div class="right">
+                                @* Fix: self-closing <label /> — invalid HTML *@
+                                <label class="Value" id="assignedTechEmail"></label>
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div full">
+                            <div class="left">
+                                <label class="Name">Request Description</label>
+                            </div>
+                            <div class="right">
+                                <label readonly="readonly" class="Value" id="requestType"></label>
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div full">
+                            <div class="left">
+                                <label class="Name">Subject</label>
+                            </div>
+                            <div class="right">
+                                <input disabled="disabled" class="Value" id="subject">
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div full">
+                            <div class="left">
+                                <label class="Name">Request Details</label>
+                            </div>
+                            <div class="right">
+                                @* Fix: onkeydown removed — handled in TicketDetail.js *@
+                                <textarea disabled="disabled" class="Value" id="requestDetail"></textarea>
+                            </div>
+                        </div>
+
+                        @* Attachments *@
+                        @* Fix: inline style height:80px — moved to CSS *@
+                        <div class="Detail-Div full attachment-row">
+                            <div class="left">
+                                <label class="Name">Attachments</label>
+                                @* Fix: ondrop removed — handled in Attachments.js *@
+                                <div id="AttachBin">
+                                    @* Fix: inline styles + Tooltip → data-tooltip *@
+                                    @* Fix: onmouseover/onmouseout removed — handled in JS *@
+                                    <img draggable="false" src="images/Bin.png"
+                                         class="attach-bin-icon"
+                                         data-tooltip="Attachment Bin" />
+                                </div>
+                            </div>
+                            <div id="CreateNoteAttachmentList" name="MainNoteAttachHolder" class="RFCAttachments"></div>
+                        </div>
+                    </div>
+
+                    @* -------------------------  Custom Fields  ------------------------- *@
+                    <div id="customFields">
+                        <div id="Group-Header">
+                            <div class="left">
+                                <label class="Name">Custom Fields</label>
+                            </div>
+                        </div>
+                        <div class="Detail-Div CustomDiv"></div>
+                    </div>
+
+                    @* -------------------------  Status and Schedule  ------------------------- *@
+                    <div id="Status-Schedule">
+                        <div id="Group-Header">
+                            <div class="left">
+                                <label class="Name">Status and Schedule</label>
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div full">
+                            <div class="left">
+                                <label class="Name">Status</label>
+                            </div>
+                            <div class="right">
+                                <select class="Value" id="status"></select>
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div full">
+                            <div class="left">
+                                <label class="Name">Priority</label>
+                            </div>
+                            <div class="right">
+                                <select disabled="disabled" class="Value" id="priority"></select>
+                            </div>
+                        </div>
+
+                        <div class="Detail-Div full">
+                            <div class="left">
+                                <label class="Name">Category</label>
+                            </div>
+                            <div class="right">
+                                <select disabled="disabled" class="Value" id="category"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    @* -------------------------  Notes  ------------------------- *@
+                    <div id="Notes">
+                        <div id="Group-Header">
+                            <div class="left">
+                                <label class="Name">Notes</label>
+                                @* Fix: duplicate id="newNoteButton" — renamed *@
+                                @* Fix: onclick removed — handled in TicketDetail.js *@
+                                <button class="accept" type="button" id="newNoteButton">+</button>
+                            </div>
+                        </div>
+                        <div class="Detail-Div Note-Div"></div>
+                    </div>
+
+                    @* -------------------------  Tasks  ------------------------- *@
+                    @* Fix: inline style display:none — moved to CSS class *@
+                    <div id="Tasks" class="hidden">
+                        <div id="Group-Header">
+                            <div class="left">
+                                <label class="Name">Tasks</label>
+                                @* Fix: was duplicate id="newNoteButton" — now unique *@
+                                @* Fix: onclick removed — handled in TicketDetail.js *@
+                                <button class="accept" type="button" id="newTaskButton">+</button>
+                            </div>
+                            <div class="right">
+                                @* Fix: duplicate id="OrderTaskBy" — use class + data attribute *@
+                                @* Fix: onclick removed — handled in TicketDetail.js *@
+                                <button class="accept order-task-btn" type="button" data-order="date">Required By</button>
+                                <button class="accept order-task-btn" type="button" data-order="status">Status</button>
+                                <button class="accept order-task-btn" type="button" data-order="assignedTech">Assigned Tech</button>
+                            </div>
+                        </div>
+                        <div class="Detail-Div Task-Div"></div>
+                    </div>
+
+                    @* -------------------------  History  ------------------------- *@
+                    <div id="History">
+                        <div id="Group-Header">
+                            <div class="left">
+                                <label class="Name">History</label>
+                            </div>
+                        </div>
+                        <div class="Detail-Div HistoryDiv"></div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@* -------------------------  Create Task Panel  ------------------------- *@
+<div id="CreateTask-Div" draggable="true">
+    <div id="CreateTask-Inner">
+        <form id="NewTaskForm">
+
+            <div class="Detail-Div center">
+                <div class="left">
+                    <label class="Name">TaskID</label>
+                </div>
+                <div class="right">
+                    <input id="taskID" disabled="disabled" class="Value">
+                </div>
+            </div>
+
+            <div class="Detail-Div center">
+                <div class="left">
+                    <label class="Name">Task Title</label>
+                </div>
+                <div class="right">
+                    <input required id="title" class="Value">
+                </div>
+            </div>
+
+            <div class="Detail-Div center">
+                <div class="left">
+                    <label class="Name">Description</label>
+                </div>
+                <div class="right">
+                    @* Fix: inline style — moved to CSS *@
+                    <textarea required id="description" class="Value task-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="Detail-Div center">
+                <div class="left">
+                    <label class="Name">Assigned Tech</label>
+                </div>
+                <div class="right">
+                    <select required class="Value" id="assignedTech"></select>
+                </div>
+            </div>
+
+            <div class="Detail-Div center">
+                <div class="left">
+                    <label class="Name">Status</label>
+                </div>
+                <div class="right">
+                    @* Fix: onchange removed — handled in Tasks.js *@
+                    <select required class="Value" id="taskStatus">
+                        <option value="1">New</option>
+                        <option value="2">In Progress</option>
+                        <option value="3">Complete</option>
+                        <option value="4">Withdrawn</option>
+                        <option value="5">Draft</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="Detail-Div center">
+                <div class="left">
+                    <label class="Name">Important Flag</label>
+                </div>
+                <div class="right">
+                    <input type="checkbox" class="Value" id="important">
+                </div>
+            </div>
+
+            <div class="Detail-Div center">
+                <div class="left">
+                    <label class="Name">Required By Date</label>
+                </div>
+                <div class="right">
+                    <input required type="date" class="Value" id="requiredDate">
+                </div>
+            </div>
+
+            <div class="Detail-Div center">
+                <div class="left">
+                    <label class="Name">Progress Log</label>
+                </div>
+                <div class="right">
+                    @* Fix: inline style — moved to CSS *@
+                    <textarea id="progressLog" class="Value task-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="Detail-Div center">
+                <div class="left">
+                    <label class="Name">Completion Date</label>
+                </div>
+                <div class="right">
+                    <input disabled="disabled" type="date" class="Value" id="completed">
+                </div>
+            </div>
+
+            @* Attachments *@
+            <div class="Detail-Div">
+                <div>
+                    @* Fix: ondrop removed — handled in Attachments.js *@
+                    <div id="TaskAttachBin" draggable="false">
+                        @* Fix: inline style — moved to CSS *@
+                        <img src="images/Bin.png" class="attach-bin-icon" />
+                    </div>
+                </div>
+                <div id="TaskDetailAttachmentList">
+                    <div class="Attachment-Icon" id="Task-Attachment-Icon1" draggable="true">
+                        <div value="" class="File-ImageUnset" id="Task-File-Image1">
+                            <img src="images/PlusIcon.png">
+                        </div>
+                        @* Fix: inline style + onchange — moved to CSS/JS *@
+                        <input type="file" title=" " class="FileUP"
+                               name="Value" value="1" id="task-fileupload1">
+                        <label id="Task-Attach-Label" class="attach-label"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="Buttons">
+                @* Fix: onclick removed — handled in Tasks.js *@
+                <button type="button" class="accept" id="SaveTask-Button">Save</button>
+                @* Fix: id="Cancle-Button" typo + duplicate — now unique *@
+                @* Fix: onclick removed — handled in Tasks.js *@
+                <button type="button" class="cancel" id="Cancel-Task-Button">Cancel</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@* -------------------------  Create Note Panel  ------------------------- *@
+<div id="CreateNote-Div" draggable="true">
+    <div id="CreateNote-Inner">
+        <form id="NewNoteForm">
+
+            <div id="Text">
+                @* Fix: <lable> typo → <label> *@
+                <label id="NoteIDHolder">Please enter note under 2000 characters.</label>
+                <textarea id="NewNoteText" maxlength="2000"></textarea>
+            </div>
+
+            <div class="Detail-Div">
+                <div>
+                    @* Fix: ondrop removed — handled in Attachments.js *@
+                    <div id="NoteAttachBin" draggable="false">
+                        @* Fix: inline style — moved to CSS *@
+                        <img src="images/Bin.png" class="attach-bin-icon" />
+                    </div>
+                </div>
+                <div id="CreateNoteAttachmentList">
+                    @* Fix: onmouseover/onmouseout + Tooltip → data-tooltip *@
+                    <div class="Attachment-Icon" id="Note-Attachment-Icon1"
+                         draggable="true"
+                         data-tooltip="Add Attachment">
+                        <div value="" class="File-ImageUnset" id="Note-File-Image1">
+                            <img src="images/PlusIcon.png">
+                        </div>
+                        @* Fix: inline style + onchange — moved to CSS/JS *@
+                        <input type="file" title=" " class="FileUP"
+                               name="Value" value="1" id="note-fileupload1">
+                        <label id="Note-Attach-Label" class="attach-label"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="Buttons">
+                @* Fix: onclick removed — handled in Notes.js *@
+                <button type="button" class="accept" id="SaveNote-Button">Save</button>
+                @* Fix: id="Cancle-Button" typo + duplicate — now unique *@
+                @* Fix: onclick removed — handled in Notes.js *@
+                <button type="button" class="cancel" id="Cancel-Note-Button">Cancel</button>
+                @* Fix: inline style display:none — moved to CSS *@
+                @* Fix: onclick removed — handled in Notes.js *@
+                <img src="images/EyeOpen.png" class="hidden"
+                     name="Visible to Client" value="0" id="Visible-Button">
+            </div>
+
+        </form>
+    </div>
+</div>

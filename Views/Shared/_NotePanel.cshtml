@@ -1,0 +1,29 @@
+﻿@* -------------------------  Note Panel  ------------------------- *@
+<div id="CreateNote-Div"
+     draggable="true">
+
+    <div id="CreateNote-Inner">
+        <form id="NewNoteForm">
+
+            <div id="Text">
+                <label id="NoteInstruction">
+                    Please enter note under 2000 characters.
+                </label>
+                <textarea id="NewNoteText" maxlength="2000"></textarea>
+            </div>
+
+            @await Html.PartialAsync("_AttachmentSlot", "Note")
+
+            <div id="Note-Buttons">
+                <button type="button" class="accept" id="SaveNote-Button">Save</button>
+                <button type="button" class="cancel" id="CancelNote-Button">Cancel</button>
+                <img src="images/EyeOpen.png"
+                     class="hidden"
+                     name="Visible to Client"
+                     value="0"
+                     id="Visible-Button" />
+            </div>
+
+        </form>
+    </div>
+</div>

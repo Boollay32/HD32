@@ -1,0 +1,40 @@
+﻿@using HelpDeskNet8.Models.ViewModels
+@using System.Text.Json
+@model FilterBoxViewModel
+
+<div id="Filter-Box"
+     data-entity-type="@Model.EntityType"
+     data-show-status="@Model.ShowStatus.ToString().ToLower()"
+     data-show-priority="@Model.ShowPriority.ToString().ToLower()"
+     data-show-title="@Model.ShowTitle.ToString().ToLower()"
+     data-show-assigned-to="@Model.ShowAssignedTo.ToString().ToLower()"
+     data-show-date-range="@Model.ShowDateRange.ToString().ToLower()"
+     data-title-label="@Model.TitleLabel"
+     data-status-options="@Html.Raw(JsonSerializer.Serialize(Model.StatusOptions))"
+     data-priority-options="@Html.Raw(JsonSerializer.Serialize(Model.PriorityOptions))"
+     data-default-statuses="@Html.Raw(JsonSerializer.Serialize(Model.DefaultStatuses))"
+     data-default-priorities="@Html.Raw(JsonSerializer.Serialize(Model.DefaultPriorities))"
+     data-custom-filters="@Html.Raw(JsonSerializer.Serialize(Model.CustomFilters))">
+
+    <div class="filter-header">
+        <h2>&#128269; Search @Model.EntityType</h2>
+    </div>
+
+    <div id="Filter-Box-Body" class="filter-body">
+
+        @* Fix: fields built by FilterManager.js using data-* attributes above *@
+        <div id="Filter-Fields-Container" class="filter-fields"></div>
+
+        <div class="filter-actions">
+            <button id="Search-Button-Filter" class="accept" type="button">
+                &#128269; Search
+            </button>
+            <button id="Clear-Button-Filter" class="cancel" type="button">
+                &#10006; Clear
+            </button>
+        </div>
+
+        <div id="Filter-Results-Count" class="filter-results"></div>
+
+    </div>
+</div>

@@ -1,0 +1,81 @@
+﻿@* -------------------------  Task Panel (overlay)  ------------------------- *@
+<div id="CreateTask-Div" class="td-overlay" role="dialog"
+     aria-modal="true"
+     aria-labelledby="task-panel-title"
+     hidden>
+
+    <div id="CreateTask-Inner" class="td-overlay-inner">
+
+        <div class="td-overlay-head">
+            <h2 id="task-panel-title">New Task</h2>
+            <button type="button" class="td-overlay-close"
+                    id="CancelTask-Button"
+                    aria-label="Close task panel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2.2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+            </button>
+        </div>
+
+        <form id="NewTaskForm" novalidate>
+
+            <div class="td-overlay-body">
+
+                <div class="td-form-field">
+                    <label for="TaskTitle">Title</label>
+                    <input type="text" id="TaskTitle" class="td-input"
+                           maxlength="200"
+                           placeholder="Task title"
+                           aria-required="true" />
+                </div>
+
+                <div class="td-form-field">
+                    <label for="TaskDescription">Description</label>
+                    <textarea id="TaskDescription" class="td-input"
+                              maxlength="2000"
+                              rows="4"
+                              placeholder="Optional description"></textarea>
+                </div>
+
+                <div class="td-form-row">
+                    <div class="td-form-field">
+                        <label for="TaskAssignedTech">Assigned To</label>
+                        <select id="TaskAssignedTech" class="td-select"
+                                aria-label="Assign task to technician"></select>
+                    </div>
+                    <div class="td-form-field">
+                        <label for="TaskDueDate">Due Date</label>
+                        <input type="date" id="TaskDueDate" class="td-input"
+                               aria-label="Task due date" />
+                    </div>
+                </div>
+
+                <div class="td-form-field">
+                    <label for="TaskPriority">Priority</label>
+                    <select id="TaskPriority" class="td-select"
+                            aria-label="Task priority">
+                        <option value="1">Low</option>
+                        <option value="2">Medium</option>
+                        <option value="3">High</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="td-overlay-foot">
+                <button type="button" class="td-btn-ghost" id="CancelTask-Button-Footer">
+                    Cancel
+                </button>
+                <button type="button" class="td-btn-primary" id="SaveTask-Button">
+                    Save Task
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>

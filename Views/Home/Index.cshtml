@@ -1,0 +1,96 @@
+﻿@section AddJSToHead {
+    <script src="~/js/Pages/Login.js" asp-append-version="true"></script>
+}
+
+@section AddCSSToHead {
+    <link rel="stylesheet/less" type="text/css" href="~/css/Pages/Login.less" asp-append-version="true">
+}
+
+<div id="Main-Div" class="main-section">
+
+    @*-- -------------------------  Login  ------------------------- --*@
+    <div id="Login-Container" class="auth-container active">
+        <div id="login-title" data-text="Govtech Helpdesk"></div>
+
+        <form name="loginform" id="login">
+            <div class="form-section">
+                <input id="UserName"
+                       placeholder="User Name"
+                       class="login-input"
+                       type="text"
+                       name="uname"
+                       required
+                       autocomplete="off" />
+            </div>
+            <div class="form-section">
+                <input id="pass"
+                       placeholder="Password"
+                       class="login-input"
+                       type="password"
+                       name="psw"
+                       required
+                       autocomplete="off" />  @*-- Fix: onkeypress removed — handled in Login.js --*@
+            </div>
+            <div class="form-section">
+                <button id="Login-Button"
+                        type="button"
+                        class="accept">
+                    Sign In
+                </button>              @*-- Fix: onclick removed — handled in Login.js --*@
+            </div>
+        </form>
+    </div>
+
+    @*-- -------------------------  PIN / Second Wall  ------------------------- --*@
+    <div id="SecondWall-Container" class="auth-container">
+        <div id="PINMessage">
+            <p>Please enter your 6 digit PIN in the fields below.</p>
+        </div>
+        <div id="SecondWall-div">
+            <div id="Pin-Boxes"></div>
+            <button id="SecondWall-Submit"
+                    class="accept"
+                    type="button">
+                Submit
+            </button>              @*-- Fix: onclick removed — handled in Login.js --*@
+        </div>
+    </div>
+
+    @*-- -------------------------  Reset Password  ------------------------- --*@
+    <div id="ResetPassword-Container" class="auth-container">
+        <div id="Reset-Password">
+            <div id="Pass-Info">
+                <p id="initialListTitle">Password must contain:</p>
+                <p>- One upper and lower case character</p>
+                <p>- A number</p>
+                <p>- And be at least 12 characters long</p>
+            </div>
+
+            <form id="NewPass">
+                <div class="new-pass-row">
+                    @*-- Fix: class not id — was duplicated 3x --*@
+                    <label for="pass1">Please create a new password</label>
+                    <input id="pass1"
+                           type="password"
+                           name="passretype1"
+                           autocomplete="off" />
+                </div>
+                <div class="new-pass-row">
+                    <label for="pass2">Retype new password</label>
+                    <input id="pass2"
+                           type="password"
+                           name="passretype2"
+                           autocomplete="off" />
+                </div>
+                <div class="new-pass-row">
+                    <button id="NewPass-Submit"
+                            type="button"
+                            class="accept">
+                        Submit
+                    </button>      @*-- Fix: onclick removed — handled in Login.js --*@
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
