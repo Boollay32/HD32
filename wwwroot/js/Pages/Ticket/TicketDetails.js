@@ -115,20 +115,12 @@ const PaneLayout = {
 
         shell.dataset.layout = layout;
 
-        // Default active tab based on layout
-        if (layout === TDLAYOUT.RIGHT_ONLY) {
-            PaneLayout._defaultTab(TAB.NOTES);
-        } else if (layout === TDLAYOUT.LEFT_ONLY) {
-            // No tabs visible — hide workspace entirely
+        if (layout === TDLAYOUT.LEFT_ONLY) {
+            // No workspace tabs — hide the workspace entirely
             const paneRight = Dom.paneRight();
             if (paneRight) paneRight.setAttribute('hidden', '');
-        } else {
-            PaneLayout._defaultTab(TAB.NOTES);
         }
-    },
-
-    _defaultTab(tabName) {
-        Tabs.activate(tabName);
+        // Tab selection is owned by Tabs.restore(), called after layout resolves.
     },
 
     init() {
@@ -140,7 +132,8 @@ const PaneLayout = {
 // -------------------------  Boot  ------------------------- //
 
 document.addEventListener('DOMContentLoaded', () => {
-    PaneLayout.init();
+    // Layout depends on the ticket's request type, which we don't have yet.
+    // Bind handlers now; resolve layout + restore tab after the fetch (load()).
     Events.bind();
     NotifyBanner.check();
     TicketDetails.load();
@@ -219,41 +212,46 @@ const Topbar = {
     },
 
     populate(data) {
+        // NOTE: GetTicketDetail returns a serialized Ticket; ASP.NET Core emits
+        // camelCase, and Status/Priority are stringified IDs (e.g. "2").
+
         // Ticket ID
         const tidEl = Dom.ticketId();
-        if (tidEl) tidEl.textContent = `#${data.TicketID}`;
+        if (tidEl) tidEl.textContent = `#${data.ticketID}`;
 
         // Subject
         const subEl = Dom.subject();
-        if (subEl) subEl.textContent = data.Subject ?? '';
+        if (subEl) subEl.textContent = data.subject ?? '';
 
         // Status pill
         Topbar.renderPill(
             Dom.metaStatus(),
-            Topbar.statusClass(data.StatusID),
-            Topbar.statusLabel(data.StatusID),
+            Topbar.statusClass(data.status),
+            Topbar.statusLabel(data.status),
         );
 
         // Priority pill
         Topbar.renderPill(
             Dom.metaPriority(),
-            Topbar.priorityClass(data.PriorityID),
-            Topbar.priorityLabel(data.PriorityID),
+            Topbar.priorityClass(data.priority),
+            Topbar.priorityLabel(data.priority),
             false,
         );
 
-        // SLA pill — only show if SLA date exists
-        if (data.SLADate) {
+        // SLA pill — the model has no dedicated SLA field, so we treat the
+        // target date as the due date. Swap to data.estimatedCompletionDate
+        // if that is your real SLA source.
+        if (data.targetDate) {
             Topbar.renderPill(
                 Dom.metaSla(),
-                Topbar.slaClass(data.SLADate),
-                Topbar.slaLabel(data.SLADate),
+                Topbar.slaClass(data.targetDate),
+                Topbar.slaLabel(data.targetDate),
                 false,
             );
         }
 
         // Page title
-        document.title = `#${data.TicketID} — ${data.Subject ?? 'Ticket'}`;
+        document.title = `#${data.ticketID} — ${data.subject ?? 'Ticket'}`;
     },
 };
 
@@ -263,18 +261,18 @@ const Fields = {
 
     populate(data) {
         // People
-        Fields._setText('raisedby', data.RaisedBy);
-        Fields._setText('authority', data.Authority);
-        Fields._setText('requesttype', data.RequestType);
+        Fields._setText('raisedby', data.raisedBy);
+        Fields._setText('authority', data.authority);
+        Fields._setText('requesttype', data.requestType);
 
-        // Dates
-        Fields._setText('created', Fields._formatDate(data.CreatedDate));
-        Fields._setText('closed', Fields._formatDate(data.ClosedDate));
+        // Dates (model fields are Created / CloseDate)
+        Fields._setText('created', Fields._formatDate(data.created));
+        Fields._setText('closed', Fields._formatDate(data.closeDate));
 
         // Target date input
         const targetEl = document.getElementById('targetdate');
-        if (targetEl && data.TargetDate) {
-            targetEl.value = data.TargetDate.split('T')[0];
+        if (targetEl && data.targetDate) {
+            targetEl.value = data.targetDate.split('T')[0];
         }
 
         // Selects — populated by existing helpers
@@ -309,6 +307,8 @@ const TicketDetails = {
         const ticketId = Session.ticketId;
         if (!ticketId) {
             console.warn('TicketDetails: no ticket ID in session');
+            PaneLayout.init();
+            Tabs.restore();
             return;
         }
 
@@ -320,14 +320,16 @@ const TicketDetails = {
 
             State.ticketData = data;
 
-            // Store request type for layout decisions
+            // Store request type for layout decisions (model field is RequestID)
             sessionStorage.setItem(
                 STORAGE_KEYS.REQUEST_TYPE,
-                data.RequestTypeID ?? 0,
+                data.requestID ?? 0,
             );
 
-            // Re-resolve layout now we have request type
+            // Resolve layout now we know the request type, then restore the
+            // saved tab once — so the layout default no longer clobbers it.
             PaneLayout.init();
+            Tabs.restore();
 
             // Populate UI
             Topbar.populate(data);
@@ -368,7 +370,7 @@ const TicketDetails = {
 
         if (typeof CustomFieldBuilder !== 'undefined') {
             const builder = new CustomFieldBuilder();
-            builder.changeCustomFields(data.requestTypeID ?? data.RequestTypeID);
+            builder.changeCustomFields(data.requestID);
         }
     }
 
@@ -397,11 +399,11 @@ const Tabs = {
         });
 
         // Persist active tab in session
-        sessionStorage.setItem(STORAGE_KEYS.ADMIN_SUB_PAGE, name);
+        sessionStorage.setItem(STORAGE_KEYS.TD_ACTIVE_TAB, name);
     },
 
     restore() {
-        const saved = sessionStorage.getItem(STORAGE_KEYS.ADMIN_SUB_PAGE);
+        const saved = sessionStorage.getItem(STORAGE_KEYS.TD_ACTIVE_TAB);
         const valid = Object.values(TAB).includes(saved);
         Tabs.activate(valid ? saved : TAB.NOTES);
     },
@@ -490,7 +492,7 @@ const Tabs = {
     init() {
         Tabs.bindClicks();
         Tabs.bindKeys();
-        Tabs.restore();
+        // Tabs.restore() is called from TicketDetails.load(), after layout.
     },
 };
 
@@ -600,13 +602,16 @@ const Save = {
         const data = State.ticketData;
         if (!data) return null;
 
+        // Real ID matters: a missing TicketID makes SaveTicket take the INSERT
+        // path and create a duplicate ticket. Fall back with || so an empty
+        // select ('') uses the existing value instead of blanking it.
         return {
-            TicketID: data.TicketID,
-            AssignedTechID: document.getElementById('assignedtech')?.value ?? data.AssignedTechID,
-            CategoryID: document.getElementById('category')?.value ?? data.CategoryID,
-            SubCategoryID: document.getElementById('subcategory')?.value ?? data.SubCategoryID,
-            PriorityID: document.getElementById('priority')?.value ?? data.PriorityID,
-            TargetDate: document.getElementById('targetdate')?.value ?? data.TargetDate,
+            TicketID: data.ticketID,
+            AssignedTechID: document.getElementById('assignedtech')?.value || data.assignedTechID,
+            CategoryID: document.getElementById('category')?.value || data.category,
+            SubCategoryID: document.getElementById('subcategory')?.value || '',
+            PriorityID: document.getElementById('priority')?.value || data.priority,
+            TargetDate: document.getElementById('targetdate')?.value || data.targetDate,
             NewAssignedTech: sessionStorage.getItem(STORAGE_KEYS.NEW_ASSIGNED_TECH) ?? null,
             OldAssignedTech: sessionStorage.getItem(STORAGE_KEYS.OLD_ASSIGNED_TECH) ?? null,
         };
@@ -625,6 +630,9 @@ const Save = {
     },
 
     async _post(payload) {
+        // Keys must match TicketMapper.Map. NOTE: 'subcategory' is sent but the
+        // mapper does not read it and the Ticket model has no SubCategory field,
+        // so it is not persisted yet — add both if you need it saved.
         const objectInfo = [
             `TicketID\`${payload.TicketID}`,
             `assignedTechName\`${payload.AssignedTechID ?? ''}`,
@@ -669,10 +677,10 @@ const Save = {
             Dirty.set(false);
             UI.toast?.('Ticket saved', 'success');
 
-            // Update topbar pills if status/priority changed
+            // Reflect the saved priority in the topbar pill
             Topbar.populate({
                 ...State.ticketData,
-                PriorityID: parseInt(payload.PriorityID, 10),
+                priority: payload.PriorityID,
             });
 
             // Clear assigned tech session keys
@@ -782,14 +790,14 @@ const Collapse = {
 
     _persistState() {
         sessionStorage.setItem(
-            STORAGE_KEYS.TABLE_PAGE_NAME,
+            STORAGE_KEYS.TD_PANES_COLLAPSED,
             JSON.stringify(State.collapsed),
         );
     },
 
     _restoreState() {
         try {
-            const saved = sessionStorage.getItem(STORAGE_KEYS.TABLE_PAGE_NAME);
+            const saved = sessionStorage.getItem(STORAGE_KEYS.TD_PANES_COLLAPSED);
             if (!saved) return;
             const parsed = JSON.parse(saved);
             if (parsed.left) Collapse._applyLeft(true);
@@ -949,6 +957,7 @@ const Events = {
         Save.bind();
         BackButton.bind();
         UnloadGuard.bind();
+        FieldHandlers.bind();   // was missing — editing fields did nothing
         Tabs.init();
         Collapse.init();
         NotifyBanner.bind();

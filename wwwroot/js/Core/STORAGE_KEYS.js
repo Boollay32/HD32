@@ -48,6 +48,11 @@ const STORAGE_KEYS = {
 
     TABLE_PAGE_NAME: 'TablePageName',
 
+    // -------------------------  Ticket Details  ------------------------- //
+
+    TD_ACTIVE_TAB: 'TDActiveTab',
+    TD_PANES_COLLAPSED: 'TDPanesCollapsed',
+
     // -------------------------  Admin  ------------------------- //
 
     ADMIN_SUB_PAGE: 'AdminSubPage',

@@ -22,15 +22,10 @@ namespace HelpDeskNet8.Controllers.Tickets
     {
         private readonly ITicketManager _ticketManager = ticketM;
         private readonly IDropdowns _dropDown = dropDownProv;
-        [HttpPost]
-        public IActionResult GetTicketDetail([FromBody] GetTicketDetailRequest request)
-        {
-            IUser user = this.GetAuthenticatedUser();
-            if (user == null) return Unauthorized();
 
-            var ticketInfo = _ticketManager.GetTicketDetail(request.TicketId, user);
-            return Ok(ticketInfo);
-        }
+        // GetTicketDetail removed - the detail page calls
+        // TicketDetailsController.GetTicketDetail (with id validation + NotFound).
+        // This duplicate had no JS caller and skipped those checks.
 
         [HttpPost]
         public IActionResult GetTickets([FromBody] GetTicketsRequest request)
