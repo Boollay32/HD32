@@ -1,0 +1,152 @@
+/* =============================  Confirm.css  ============================= */
+/* Styles for the reusable Confirm/guard modal (Core/Confirm.js).            */
+/* Palette mirrors Core/Variables.less.                                      */
+/* ======================================================================== */
+
+.cf-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 4000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(29, 28, 26, 0);
+    transition: background 0.16s ease;
+}
+
+.cf-overlay.is-visible {
+    background: rgba(29, 28, 26, 0.44);
+}
+
+.cf-dialog {
+    width: 100%;
+    max-width: 420px;
+    background: #FFFFFF;
+    border: 1px solid #D8D3C8;
+    border-radius: 14px;
+    box-shadow: 0 18px 48px rgba(29, 28, 26, 0.22);
+    padding: 22px 22px 18px;
+    font-family: "Spline Sans", system-ui, sans-serif;
+    color: #1D1C1A;
+    transform: translateY(8px) scale(0.98);
+    opacity: 0;
+    transition: transform 0.16s ease, opacity 0.16s ease;
+}
+
+.cf-overlay.is-visible .cf-dialog {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+.cf-head {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin-bottom: 10px;
+}
+
+.cf-icon {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #E1EFEA;
+    color: #15695A;
+}
+
+.cf-danger .cf-icon {
+    background: #FBE6E2;
+    color: #B03A2E;
+}
+
+.cf-title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.cf-msg {
+    margin: 0 0 18px;
+    padding-left: 49px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #56524B;
+}
+
+.cf-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 9px;
+}
+
+.cf-actions-3 {
+    justify-content: space-between;
+}
+
+.cf-btn {
+    appearance: none;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    padding: 9px 16px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+
+.cf-btn:focus-visible {
+    outline: 2px solid #15695A;
+    outline-offset: 2px;
+}
+
+.cf-btn-ghost {
+    background: transparent;
+    border-color: #D8D3C8;
+    color: #56524B;
+}
+
+.cf-btn-ghost:hover {
+    background: #FBFAF7;
+    color: #1D1C1A;
+}
+
+.cf-btn-quiet {
+    background: #F1EEE7;
+    color: #56524B;
+}
+
+.cf-btn-quiet:hover {
+    background: #E6E2D9;
+    color: #1D1C1A;
+}
+
+.cf-btn-primary {
+    background: #15695A;
+    color: #FFFFFF;
+}
+
+.cf-btn-primary:hover {
+    background: #0F5246;
+}
+
+.cf-btn-danger {
+    background: #B03A2E;
+    color: #FFFFFF;
+}
+
+.cf-btn-danger:hover {
+    background: #92301F;
+}
+
+@media (max-width: 480px) {
+    .cf-msg { padding-left: 0; }
+    .cf-actions, .cf-actions-3 { flex-wrap: wrap; }
+    .cf-btn { flex: 1 1 auto; }
+}
