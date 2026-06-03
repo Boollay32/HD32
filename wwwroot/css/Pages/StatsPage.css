@@ -1,0 +1,13 @@
+#Table-Div-Outer #Table-Div-Inner table thead tr th {
+  padding-left: 20px;
+  cursor: default;
+  text-align: left !important;
+}
+#Table-Div-Outer #Table-Div-Inner table tbody tr td {
+  padding-left: 20px;
+  cursor: default;
+  text-align: left !important;
+}
+#Table-Div-Outer #Table-Div-Inner table tbody tr td:hover {
+  color: black !important;
+}

@@ -1,0 +1,177 @@
+/* Fonts */
+/* Colours */
+/* Font sizes */
+#History {
+  max-height: 400px;
+  overflow-x: hidden;
+}
+#History .HistoryDiv {
+  max-height: 340px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+#History .HistoryDiv .History-Div {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  width: 98%;
+  margin: 5px auto;
+  background-color: #99C472;
+  border-bottom: 5px solid #7fb527;
+  border-radius: 3px;
+  padding: 6px 10px;
+  gap: 12px;
+}
+#History .HistoryDiv .History-Div label {
+  font-size: 14px;
+  font-family: Calibri;
+  color: #111;
+}
+#Notes {
+  max-height: 560px;
+  overflow-x: hidden;
+}
+#Notes .Note-Div {
+  margin-top: 10px;
+  max-height: 450px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+#Notes .Note-Div .Note-Box {
+  position: relative;
+  float: left;
+  width: 98%;
+  height: auto;
+  min-height: 60px;
+  background-color: #fff37a;
+  border-bottom: 5px solid #e0cc00;
+  border-radius: 10px;
+  margin-left: 1%;
+  margin-bottom: 10px;
+}
+#Notes .Note-Div .Note-Box #EditNoteImage {
+  cursor: pointer;
+}
+#Notes .Note-Div .Note-Box .NoteID {
+  opacity: 0;
+  height: 5px;
+}
+#Notes .Note-Div .Note-Box .Note-Header {
+  position: relative;
+  float: left;
+  box-sizing: border-box;
+  margin-top: 5px;
+  margin-left: 20px;
+  width: 80%;
+  height: 22px;
+  font-size: 18px;
+  font-family: Calibri;
+}
+#Notes .Note-Div .Note-Box .Note-Body {
+  position: relative;
+  float: left;
+  box-sizing: border-box;
+  margin-top: 10px;
+  margin-left: 50px;
+  width: 90%;
+  height: auto;
+  min-height: 40px;
+  font-size: 18px;
+  font-family: Calibri;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+#Notes .Note-Div .Note-Box .Note-Attachments {
+  z-index: 2000;
+  position: relative;
+  float: left;
+  margin-top: 5px;
+  margin-left: 20px;
+  width: 100%;
+  height: 50px;
+}
+#Tasks {
+  max-height: 390px;
+  overflow-x: hidden;
+}
+#Tasks .Task-Div {
+  max-height: 330px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+#Tasks .Task-Div .Task-Box {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  background-color: #bdf9ff;
+  border-bottom: 5px solid #62adb5;
+  border-radius: 5px;
+  width: 98%;
+  margin: 5px auto;
+  padding: 6px 10px;
+  gap: 10px;
+  font-size: 14px;
+  font-family: Calibri;
+  cursor: pointer;
+}
+#Tasks .Task-Div .Task-Box:hover {
+  background-color: #a8f0f8;
+}
+#Tasks .Task-Div .Task-Box .Task-Body-Div {
+  flex: 1;
+  min-width: 0;
+}
+#Tasks .Task-Div .Task-Box .Task-Body-Div p {
+  margin: 2px;
+  color: #111;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#Tasks .Task-Div .Task-Box .Task-Body-Div.symbols {
+  flex: 0 0 40px;
+  font-size: 20px;
+}
+#Tasks .Task-Div .Task-Box .Task-Body-Div.tiny {
+  flex: 0 0 40px;
+}
+#Tasks .Task-Div .Task-Box .Task-Body-Div.small {
+  flex: 0 0 120px;
+}
+#Tasks .Task-Div .Task-Box .Task-Body-Div.medium {
+  flex: 0 0 160px;
+}
+#Tasks .Task-Div .Task-Box .Task-Body-Div.large {
+  flex: 2;
+}
+#TaskImage {
+  float: left;
+  position: relative;
+  width: inherit;
+  height: 100%;
+  margin: 5px;
+}
+#TaskImage label {
+  height: 100%;
+  width: auto;
+  display: block;
+  font-size: 25px;
+  padding: 0;
+  cursor: pointer;
+}
+.Avatar {
+  width: 180px;
+  height: 150px;
+  border-radius: 10px;
+}
+@media screen and (max-width: 1240px) {
+  #Main-Body {
+    background-image: none !important;
+    background-color: #f6f6f6 !important;
+  }
+}
+@media screen and (max-width: 1000px) {
+  form {
+    width: 98% !important;
+  }
+}

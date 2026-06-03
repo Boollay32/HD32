@@ -1,0 +1,30 @@
+body {
+  display: none;
+  margin: 0;
+  min-width: 600px;
+}
+/* Font colours*/
+/* Colours*/
+/* Fonts*/
+.shadow-box {
+  -webkit-box-shadow: -2px 2px 6px 0px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: -2px 2px 6px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: -2px 2px 6px 0px rgba(0, 0, 0, 0.2);
+}
+#User-Form {
+  position: relative;
+  min-height: 200px;
+  height: auto;
+  width: 80%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+#Save-Button,
+#Back-Button,
+#Delete-Button,
+#SaveEmail-Button {
+  padding: 0 10px 0 10px;
+  width: auto;
+  height: 40px;
+  margin: 5px;
+}

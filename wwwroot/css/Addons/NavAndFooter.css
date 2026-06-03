@@ -1,0 +1,258 @@
+/*=============== Modern Navbar & Footer ===================*/
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100);
+/* Variables */
+/* Mixins */
+.shadow-box {
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+.fade {
+  transition: all 0.2s ease;
+}
+/* ============= Body Setup ============= */
+body {
+  display: block;
+  /* ✅ Changed from display: none */
+  margin: 0;
+  padding: 0;
+  padding-top: 56px;
+  /* ✅ Space for fixed navbar */
+  padding-bottom: 40px;
+  /* ✅ Space for fixed footer */
+  font-family: Calibri, Arial, sans-serif;
+}
+button {
+  cursor: pointer;
+}
+/* ============= Modern Compact Navbar ============= */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 56px;
+  background: #424141;
+  z-index: 1000;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  padding: 0px;
+  gap: 12px;
+  /* Main Menu */
+  /* Logout Section */
+}
+nav #navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  /* ✅ Take available space */
+  min-width: 0;
+  /* ✅ Allow shrinking */
+  margin: 0;
+  padding: 0;
+  height: 56px;
+  overflow-x: auto;
+  /* ✅ Scroll if needed */
+  overflow-y: hidden;
+  /* Hide scrollbar */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+nav #navbar-menu::-webkit-scrollbar {
+  display: none;
+}
+nav #navbar-menu .subnav {
+  position: relative;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  /* ✅ Reduced from 12px */
+  flex-shrink: 0;
+  /* ✅ Don't shrink menu items */
+  /* Main menu link */
+  /* Dropdown menu */
+  /* Show dropdown on hover */
+}
+nav #navbar-menu .subnav > a {
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: Calibri;
+  cursor: pointer;
+  padding: 8px 10px;
+  /* ✅ Reduced padding */
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+nav #navbar-menu .subnav > a:hover {
+  color: #FFCF7A;
+  background: rgba(255, 255, 255, 0.05);
+}
+nav #navbar-menu .subnav > a.active {
+  color: orange;
+}
+nav #navbar-menu .subnav .subnav-content {
+  display: none;
+  position: absolute;
+  top: 56px;
+  left: 0;
+  background: #424141;
+  min-width: 180px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+}
+nav #navbar-menu .subnav .subnav-content ul {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0;
+}
+nav #navbar-menu .subnav .subnav-content ul li {
+  padding: 0;
+}
+nav #navbar-menu .subnav .subnav-content ul li a {
+  display: block;
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: Calibri;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+nav #navbar-menu .subnav .subnav-content ul li a:hover {
+  color: #FFCF7A;
+  background: rgba(255, 255, 255, 0.05);
+}
+nav #navbar-menu .subnav:hover .subnav-content {
+  display: block;
+}
+nav #navbar-logout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* ✅ Reduced from 12px */
+  flex-shrink: 0;
+  /* ✅ Never shrink logout */
+  margin-left: auto;
+  /* ✅ Push to right edge */
+}
+nav #navbar-logout #subnav-logout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+nav #navbar-logout #subnav-logout a {
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: Calibri;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+nav #navbar-logout #subnav-logout #Account-Name {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  max-width: 120px;
+  /* ✅ Limit width */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Hide on smaller screens */
+}
+@media screen and (max-width: 1024px) {
+  nav #navbar-logout #subnav-logout #Account-Name {
+    display: none;
+  }
+}
+nav #navbar-logout #subnav-logout #Logout-button {
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  font-size: 13px;
+  /* ✅ Slightly smaller */
+}
+nav #navbar-logout #subnav-logout #Logout-button:hover {
+  color: #FFCF7A;
+  background: rgba(255, 255, 255, 0.15);
+}
+/* Display Layer (for dropdown overlay) */
+#DisplayLayerNav {
+  display: none;
+  /* Not needed with modern approach */
+}
+/* ============= Footer ============= */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 40px;
+  background: #424141;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+footer a {
+  font-family: Calibri;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  margin: 0;
+}
+/* ============= Responsive ============= */
+@media screen and (max-width: 1240px) {
+  nav {
+    height: 50px;
+    padding: 0px;
+  }
+  nav #navbar-menu {
+    gap: 2px;
+    margin-left: 12px;
+  }
+  nav #navbar-menu .subnav {
+    padding: 0 8px;
+  }
+  nav #navbar-menu .subnav > a {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+  nav #navbar-menu .subnav .subnav-content {
+    top: 50px;
+    min-width: 160px;
+  }
+  nav #navbar-menu .subnav .subnav-content ul li a {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  nav #navbar-logout {
+    gap: 8px;
+  }
+  nav #navbar-logout #subnav-logout a {
+    font-size: 13px;
+  }
+  body {
+    padding-top: 50px;
+  }
+}
+@media screen and (max-width: 768px) {
+  nav #navbar-menu .subnav > a {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+  footer {
+    display: none;
+    /* Hide footer on mobile */
+  }
+  body {
+    padding-bottom: 0;
+  }
+}
