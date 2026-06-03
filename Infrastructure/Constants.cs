@@ -8,6 +8,15 @@ namespace HelpDeskNet8.Infrastructure
             public const int Govtech = 151;  // Govtech internal authority
         }
 
+        // Admin tiers returned by usp_Helpdesk_AdminAccessCheck (IAuthenticator.CheckAdmin).
+        public static class AdminLevel
+        {
+            public const int Authority = 0;        // external authority (client) user
+            public const int StandardGovtech = 1;  // standard Govtech staff
+            public const int Admin = 2;            // full access: view all authorities + edit
+            public const int RfcOnly = 4;          // RFC-only access
+        }
+
         public static class TicketDefaults
         {
             public const int StatusId = 1;  // Open
