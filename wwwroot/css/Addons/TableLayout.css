@@ -1,0 +1,179 @@
+/* Variables */
+/* Mixins */
+.shadow-box {
+  -webkit-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.2);
+}
+/* Body */
+body {
+  background-color: white;
+  font-family: Calibri;
+  font-size: 18px;
+  font-weight: 400;
+  text-rendering: optimizeLegibility;
+}
+/* Note Display Tooltip */
+#Note-Display {
+  padding: 10px;
+  display: none;
+  z-index: 5000;
+  position: fixed;
+  width: 400px;
+  height: auto;
+  border: solid grey 1px;
+  background-color: white;
+  -webkit-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.2);
+  overflow-wrap: break-word;
+}
+.page-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  margin: 0;
+  padding: 12px 16px;
+  height: calc(100vh - 120px);
+  overflow: hidden;
+}
+.page-container #Note-Display {
+  flex: 0 0 auto;
+}
+.page-container #Filter-Box {
+  flex: 0 0 auto;
+  margin-bottom: 12px;
+}
+.page-container #Table {
+  flex: 1 1 auto;
+  overflow: auto;
+  min-height: 0;
+}
+/* ============= Table Container ============= */
+#Table {
+  position: relative;
+  width: 100%;
+  min-width: 860px;
+  height: 100%;
+  /* ✅ Changed from max-height: 600px */
+  overflow-y: auto;
+  border-radius: 5px;
+  box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.2);
+  background: white;
+}
+#Table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  /* ============= Sticky Header ============= */
+  /* ============= Table Body ============= */
+}
+#Table table thead {
+  position: sticky;
+  top: 0;
+  z-index: 300;
+  background: #424141;
+}
+#Table table thead::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), transparent);
+}
+#Table table thead tr th {
+  font-family: Calibri;
+  color: white;
+  background: #424141;
+  border-bottom: 4px solid #9ea7af;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: left;
+  vertical-align: middle;
+  padding: 12px;
+  height: 35px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+#Table table thead tr th:hover {
+  background: #5c5a5a;
+}
+#Table table thead tr th:first-child {
+  text-align: center;
+}
+#Table table tbody {
+  background: white;
+}
+#Table table tbody tr {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  height: 40px !important;
+  /* ✅ Force fixed row height */
+  max-height: 40px !important;
+  /* ✅ Prevent expansion */
+}
+#Table table tbody tr:nth-child(odd) {
+  background: #EBEBEB;
+}
+#Table table tbody tr:hover {
+  background: #FFCF7A;
+  cursor: pointer;
+}
+#Table table tbody tr:hover td {
+  color: black;
+}
+#Table table tbody tr td {
+  font-family: Calibri;
+  background: transparent;
+  text-align: left;
+  vertical-align: middle;
+  font-weight: 400;
+  font-size: 18px;
+  border-right: 1px solid #C1C3D1;
+  padding: 6px 12px;
+  /* ✅ Reduced vertical padding */
+  height: 40px !important;
+  /* ✅ Force height */
+  max-height: 40px !important;
+  /* ✅ Prevent expansion */
+  box-sizing: border-box;
+  /* ✅ Include padding in height calculation */
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  line-height: 1.4;
+  /* ✅ Tighter line height */
+}
+#Table table tbody tr td:first-child {
+  text-align: center;
+  font-weight: 600;
+}
+#Table table tbody tr td:last-child {
+  border-right: none;
+}
+#Table table tbody tr td.small {
+  width: 60px;
+  min-width: 60px;
+  text-align: center;
+  padding: 5px;
+}
+/* Responsive */
+@media screen and (max-width: 1440px) {
+  #Table {
+    /* ✅ Removed max-height override */
+  }
+  #Table table thead tr th {
+    font-size: 14px;
+    padding: 10px;
+  }
+  #Table table tbody tr td {
+    font-size: 14px;
+    padding: 8px 10px;
+    /* ✅ Adjusted padding */
+  }
+  #Table table tbody tr td.small {
+    width: 40px;
+    min-width: 40px;
+  }
+}

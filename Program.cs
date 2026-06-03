@@ -15,8 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.SetBasePath(Directory.GetCurrentDirectory());
 builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-builder.Services.AddControllersWithViews();
-
 var connectionString = builder.Configuration.GetConnectionString("testgovtechhelpdesk");
 
 builder.Services.AddDBConnection(connectionString);
@@ -49,12 +47,24 @@ builder.Services.AddControllersWithViews(options =>
 });
 builder.Services.AddScoped<AuthenticateActionFilter>();
 
+// CORS: restrict to origins listed under "Cors:AllowedOrigins" in config.
+// Falls back to the previous permissive behaviour only while none are set,
+// so nothing changes until you populate that setting - then it locks down.
+var corsOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        if (corsOrigins is { Length: > 0 })
+            policy.WithOrigins(corsOrigins).AllowAnyMethod().AllowAnyHeader();
+        else
+            policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); // TODO: set Cors:AllowedOrigins
+    });
+});
+
 var app = builder.Build();
 
-app.UseCors(builder => builder
-    .AllowAnyOrigin()
-    .AllowAnyMethod()
-    .AllowAnyHeader());
+app.UseCors();
 
 if (!app.Environment.IsDevelopment())
 {

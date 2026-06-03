@@ -1,0 +1,293 @@
+/*=============== Less ===================*/
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100);
+/* Font sizes*/
+/* Font colours*/
+/* Colours*/
+/* Fonts*/
+html {
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  width: 100%;
+  height: 100% !important;
+  background-image: url('../../images/bg2.jpg') !important;
+  display: block !important;
+  overflow-x: hidden;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+#Main-Div {
+  margin: 0;
+  width: 100%;
+  height: 100% !important;
+}
+#nav,
+.footer {
+  display: none;
+}
+#Menu-Div {
+  display: none;
+}
+/*=================================================*/
+.auth-container {
+  display: none;
+}
+.auth-container.active {
+  display: block;
+}
+.shadow-box {
+  -webkit-box-shadow: -2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: -2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: -2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+}
+h1 {
+  font-family: Calibri;
+  font-size: 56px;
+  color: black;
+  text-shadow: 0 3px 3px black;
+  font-weight: bold;
+}
+#Login-Container {
+  padding-top: 20px;
+  position: relative;
+  width: 500px;
+  height: 480px;
+  min-height: 300px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-box-shadow: -2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: -2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: -2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+}
+#Login-Container #login-title {
+  box-sizing: border-box;
+  width: 350px;
+  height: 300px;
+  position: relative;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  background-image: url('../../images/govtechlogofull.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+#Login-Container #login-title h1 {
+  height: inherit;
+  border: 1px;
+  color: orange;
+  text-shadow: 1px 1px 2px black;
+  text-align: center;
+  text-transform: uppercase;
+}
+#Login-Container #login {
+  position: relative;
+  height: auto;
+  width: 430px;
+  margin: 0 auto;
+}
+#Login-Container #login #form-section-1,
+#Login-Container #login #form-section-2,
+#Login-Container #login #form-section-3 {
+  height: 50px;
+  margin-top: 10px;
+  position: relative;
+  width: 350px;
+  margin: 0 auto;
+}
+#Login-Container #login #form-section-1 label,
+#Login-Container #login #form-section-2 label,
+#Login-Container #login #form-section-3 label {
+  font-size: 26px;
+}
+#Login-Container #login #form-section-1 button,
+#Login-Container #login #form-section-2 button,
+#Login-Container #login #form-section-3 button {
+  width: inherit;
+  border-radius: 20px;
+}
+#Login-Container #login #form-section-1 button:focus,
+#Login-Container #login #form-section-2 button:focus,
+#Login-Container #login #form-section-3 button:focus {
+  outline: 0;
+}
+#Login-Container #login #form-section-1 .login-input,
+#Login-Container #login #form-section-2 .login-input,
+#Login-Container #login #form-section-3 .login-input {
+  position: relative;
+  box-sizing: border-box;
+  width: inherit;
+  height: 38px;
+  font-family: Calibri;
+  font-size: 20px;
+  border-radius: 20px;
+  border: 1px solid #1b1b1b;
+  float: left;
+  background-color: white;
+  padding-left: 10px;
+}
+#Login-Container #login #form-section-1 .login-input:focus,
+#Login-Container #login #form-section-2 .login-input:focus,
+#Login-Container #login #form-section-3 .login-input:focus {
+  outline: 0;
+}
+#SecondWall-Container {
+  top: 30%;
+  box-sizing: border-box;
+  position: relative;
+  width: 650px;
+  height: 300px;
+  margin: 0 auto;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  -webkit-box-shadow: -2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: -2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: -2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+}
+#SecondWall-Container #PINMessage {
+  width: 600px;
+  height: auto;
+  text-align: center;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+#SecondWall-Container #PINMessage p {
+  color: black;
+  font-size: 28px;
+  font-family: Calibri;
+}
+#SecondWall-Container #SecondWall-div {
+  position: relative;
+  height: auto;
+  width: 500px;
+  margin: 0 auto;
+}
+#SecondWall-Container #SecondWall-div label {
+  padding-top: 20px;
+  float: left;
+  width: 200px;
+  padding-right: 20px;
+  font-size: 30px;
+  font-family: Calibri;
+  height: 80px;
+}
+#SecondWall-Container #SecondWall-div #Pin-Boxes {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: auto;
+  padding-left: 10px;
+  margin-bottom: 20px;
+}
+#SecondWall-Container #SecondWall-div #Pin-Boxes input,
+#SecondWall-Container #SecondWall-div #Pin-Boxes select {
+  box-sizing: border-box;
+  position: relative;
+  float: left;
+  width: 80px;
+  padding: 20px 0px 20px 28px;
+  height: 80px;
+  font-size: 30px;
+  font-family: Calibri;
+  font-weight: 600;
+}
+#SecondWall-Container #SecondWall-div #Pin-Boxes #pin-1 {
+  border-top-left-radius: 5px !important;
+  border-bottom-left-radius: 5px !important;
+  border-style: solid;
+  border-width: 1px;
+  border-color: darkgrey;
+}
+#SecondWall-Container #SecondWall-div #Pin-Boxes #pin-6 {
+  border-top-right-radius: 5px !important;
+  border-bottom-right-radius: 5px !important;
+  border-style: solid;
+  border-width: 1px;
+  border-color: darkgrey;
+}
+#SecondWall-Container #SecondWall-div #Submit {
+  margin-left: 150px;
+  width: 180px;
+  font-size: 22px;
+  font-family: Calibri;
+}
+#ResetPassword-Container {
+  top: 25%;
+  position: relative;
+  margin: 0 auto;
+  width: 450px;
+  height: 400px;
+  min-height: 300px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  -webkit-box-shadow: -2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: -2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: -2px 2px 2px 0px rgba(0, 0, 0, 0.2);
+}
+#ResetPassword-Container #Pass-Info {
+  box-sizing: border-box;
+  position: relative;
+  height: auto;
+  width: 90%;
+  margin: 0 auto;
+  padding-top: 20px;
+  margin-bottom: 40px;
+}
+#ResetPassword-Container #NewPassDiv {
+  box-sizing: border-box;
+  position: relative;
+  height: 80px;
+  width: 70%;
+  margin: 0 auto;
+}
+#ResetPassword-Container label {
+  box-sizing: border-box;
+  position: relative;
+  height: auto;
+  width: 60%;
+  margin-left: 16%;
+  font-family: Calibri;
+  font-size: 20px;
+}
+#ResetPassword-Container input {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: 38px;
+  font-family: Calibri;
+  font-size: 20px;
+  border-radius: 20px;
+  border: 1px solid #1b1b1b;
+  float: left;
+  background-color: white;
+  padding-left: 10px;
+}
+#ResetPassword-Container input:focus {
+  outline: 0;
+}
+#ResetPassword-Container p {
+  font-family: Calibri;
+  font-size: 20px;
+  position: relative;
+  width: 80%;
+  margin: 0 0 0 17%;
+  overflow-wrap: normal;
+}
+#ResetPassword-Container #initialListTitle {
+  margin-top: 5%;
+  font-weight: 600;
+}
+#ResetPassword-Container button {
+  width: 100%;
+}
+#link a {
+  color: purple;
+}
+#link a:hover {
+  color: blue;
+}
+/*=================  password reset popup ===================*/
