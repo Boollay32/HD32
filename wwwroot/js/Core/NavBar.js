@@ -18,25 +18,21 @@ const NavBar = {
     myTickets() {
         sessionStorage.removeItem(STORAGE_KEYS.LAST_TICKET_SEARCH);
         sessionStorage.setItem(STORAGE_KEYS.MY_TICKETS, '1');
-        sessionStorage.setItem(STORAGE_KEYS.TICKET_OR_TASK, 'Ticket');
         Nav.toTicketPage();
     },
 
     allTickets() {
         sessionStorage.setItem(STORAGE_KEYS.MY_TICKETS, '0');
-        sessionStorage.setItem(STORAGE_KEYS.TICKET_OR_TASK, 'Ticket');
         Nav.toTicketPage();
     },
 
     allTasks() {
         sessionStorage.setItem(STORAGE_KEYS.MY_TICKETS, '0');
-        sessionStorage.setItem(STORAGE_KEYS.TICKET_OR_TASK, 'Task');
         Nav.toTasksPage();
     },
 
     myTasks() {
         sessionStorage.setItem(STORAGE_KEYS.MY_TICKETS, '1');
-        sessionStorage.setItem(STORAGE_KEYS.TICKET_OR_TASK, 'Task');
         Nav.toTasksPage();
     },
 

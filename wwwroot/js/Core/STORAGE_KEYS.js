@@ -18,7 +18,6 @@ const STORAGE_KEYS = {
 
     // -------------------------  Tickets  ------------------------- //
 
-    TICKET_OR_TASK: 'TicketOrTask',
     MY_TICKETS: 'MyTickets',
     SEARCH_OR_TICKET: 'SearchOrTicket',
     REQUEST_TYPE: 'RequestType',

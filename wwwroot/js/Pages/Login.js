@@ -20,7 +20,6 @@ window.onload = function () {
     CreatePinBoxes();
 
     document.getElementById("nav").innerHTML = "";
-    sessionStorage.setItem("TicketOrTask", "Ticket");
 
     // Fix: wire up events removed from HTML
     document.getElementById("Login-Button")?.addEventListener("click", () => Login(document.getElementById("login")));
