@@ -2171,3 +2171,246 @@ body {
         }
     }
 }
+
+// =========================================================================
+//  Inline task editor (expand-in-place) — added with the Tasks.js rewrite
+// =========================================================================
+
+.td-task-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+
+    &.is-editing {
+        border-color: @accent;
+        box-shadow: 0 4px 16px fade(@accent, 14%);
+    }
+
+    &.is-editing.is-complete {
+        opacity: 1;
+
+        .td-task-title {
+            text-decoration: none;
+            color: @ink;
+        }
+    }
+}
+
+.td-task-summary {
+    display: flex;
+    align-items: flex-start;
+    gap: @space-3;
+    padding: 10px 12px;
+}
+
+.td-task-check {
+    width: auto;
+    height: auto;
+    border: none;
+    background: none;
+    margin-top: 2px;
+    display: flex;
+
+    input[type="checkbox"] {
+        width: 17px;
+        height: 17px;
+        accent-color: @accent;
+        cursor: pointer;
+    }
+
+    label { display: none; }
+}
+
+.td-task-open {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+}
+
+.td-task-star {
+    color: @amber;
+    margin-right: 3px;
+}
+
+.td-task-status {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: @radius-pill;
+    letter-spacing: .02em;
+
+    &.st-new       { background: @line-2;  color: @ink-2; }
+    &.st-progress  { background: @amber-bg; color: @amber; }
+    &.st-done      { background: @green-bg; color: @green; }
+    &.st-withdrawn { background: @line-2;  color: @muted; }
+    &.st-draft     { background: @panel-2; color: @muted; border: 1px solid @line-2; }
+}
+
+// -------------------------  Editor body  ------------------------- //
+
+.td-task-editor {
+    border-top: 1px solid @line-2;
+    background: @panel-2;
+    padding: 14px 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: @space-3;
+    animation: rise @transition-md both;
+}
+
+.td-ed-row {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.td-ed-label {
+    font-size: @text-xs;
+    font-weight: 700;
+    color: @muted;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.td-ed-input {
+    width: 100%;
+    font: inherit;
+    font-size: @text-sm;
+    color: @ink;
+    background: @panel;
+    border: 1px solid @line;
+    border-radius: @radius-sm;
+    padding: 8px 10px;
+    transition: border-color @transition, box-shadow @transition;
+
+    &:focus {
+        outline: none;
+        border-color: @accent;
+        box-shadow: 0 0 0 3px fade(@accent, 12%);
+    }
+}
+
+.td-ed-area {
+    resize: vertical;
+    min-height: 64px;
+    line-height: 1.5;
+}
+
+.td-ed-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: @space-3;
+}
+
+.td-ed-important {
+    justify-content: flex-end;
+}
+
+.td-ed-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: @text-sm;
+    color: @ink-2;
+    cursor: pointer;
+
+    input { width: 16px; height: 16px; accent-color: @accent; cursor: pointer; }
+}
+
+// -------------------------  Attachments  ------------------------- //
+
+.td-att-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.td-att {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: @space-2;
+    background: @panel;
+    border: 1px solid @line-2;
+    border-radius: @radius-sm;
+    padding: 6px 8px 6px 11px;
+    font-size: @text-sm;
+}
+
+.td-att-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: @ink-2;
+}
+
+.td-att-remove {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border: none;
+    background: none;
+    color: @muted;
+    font-size: 17px;
+    line-height: 1;
+    border-radius: @radius-sm;
+    cursor: pointer;
+    transition: background @transition, color @transition;
+
+    &:hover { background: @red-bg; color: @red; }
+}
+
+.td-att-empty {
+    font-size: @text-xs;
+    color: @muted;
+    font-style: italic;
+}
+
+// -------------------------  Footer  ------------------------- //
+
+.td-ed-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: @space-2;
+    padding-top: 4px;
+}
+
+.td-ed-dirty {
+    font-size: @text-xs;
+    font-weight: 700;
+    color: @amber;
+
+    &::before {
+        content: "\25CF";
+        margin-right: 5px;
+        font-size: 9px;
+        vertical-align: middle;
+    }
+}
+
+.td-ed-foot-btns {
+    display: flex;
+    gap: @space-2;
+    margin-left: auto;
+}
+
+@media (max-width: 560px) {
+    .td-ed-grid { grid-template-columns: 1fr; }
+    .td-ed-important { justify-content: flex-start; }
+}
