@@ -1,167 +1,146 @@
 // =============================  TicketPage.js  ============================= //
+// The ticket queue. All list behaviour lives in QueueView; this file is just
+// the Tickets configuration: how to fetch, which columns/views, and what
+// happens when a row is opened.
+
+// -------------------------  Presentation helpers  ------------------------- //
+
+const TQ_PRIORITY_COLOR = { Urgent: '#C0392B', High: '#A25A06', Normal: '#5F5A52', Low: '#8E897F' };
+const TQ_PRIORITY_ORDER = { Urgent: 0, High: 1, Normal: 2, Low: 3 };
+const TQ_STATUS_COLOR = {
+    Open:      ['#1E51C0', '#E8EFFD'],
+    Pending:   ['#A25A06', '#FAEFDB'],
+    'On Hold': ['#5F5A52', '#E6E3DC'],
+    Closed:    ['#1F7A43', '#E4F2E8'],
+    Solved:    ['#1F7A43', '#E4F2E8'],
+};
+const TQ_AV_PALETTE = ['#15695A', '#1E51C0', '#A25A06', '#6D28C9', '#B23121', '#0E6E80'];
+
+const TQesc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const TQinitials = n => (n || '?').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+const TQavColor = n => { let h = 0; for (const c of (n || '')) h = c.charCodeAt(0) + ((h << 5) - h); return TQ_AV_PALETTE[Math.abs(h) % TQ_AV_PALETTE.length]; };
+const TQisOpen = r => !['Closed', 'Solved'].includes(r.status);
+const TQago = iso => {
+    if (!iso) return '—';
+    const m = Math.round((Date.now() - new Date(iso)) / 60000);
+    if (isNaN(m)) return '—';
+    if (m < 60) return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    return h < 24 ? `${h}h ago` : `${Math.floor(h / 24)}d ago`;
+};
+
+// -------------------------  Page  ------------------------- //
 
 class TicketPage extends PageBase {
-
     constructor() {
-        super();
-        this.filterType = 'Ticket';
-        this.config = {
-            tableId: 'Table',
-            filterBoxId: 'Filter-Box',
-            storageKey: STORAGE_KEYS.LAST_TICKET_SEARCH,  // filter state
-            blacklistedColumns: [
-                STORAGE_KEYS.USER_ID,
-                'updated',
-                'userName',
-                'statusDesc',
-                'priority',
-                'notify'
-            ]
-
-        };
-
-        this.filterManager = null;
-        this.tableManager = null;
+        super('Ticket');
+        this.queue = null;
     }
-
-    // -------------------------  Init  ------------------------- //
 
     async init() {
         if (!await this.checkAuth()) return;
-
-        if (typeof TableManager === 'undefined' || typeof FilterManager === 'undefined') {
-            this.handleError('Required managers not loaded.');
-            return;
-        }
+        if (typeof SetActivePage === 'function') SetActivePage('TicketMenu');
 
         try {
-            await Promise.all([
-                this.waitForElement(this.config.tableId),
-                this.waitForElement(this.config.filterBoxId)
-            ]);
+            await this.waitForElement('queue-mount');
         } catch {
             this.handleError('Page elements failed to load.');
             return;
         }
 
-        this._initTableManager();
-        this._initFilterManager();
-
-        try {
-            await this.buildFilterFields();
-        } catch (err) {
-            console.error('Filter build failed:', err);
-        }
-
-        await this.handleSearch('');
+        this.queue = new QueueView('#queue-mount', this._config());
+        await this.queue.load();
     }
 
-    // -------------------------  Managers  ------------------------- //
-
-    _initTableManager() {
-        this.tableManager = new TableManager(this.config.tableId, {
-            blacklist: this.config.blacklistedColumns,
-            onRowClick: (data) => this.handleTicketClick(data),
-            sortable: true,
-            striped: true,
-            hover: true
-        });
-    }
-
-    _initFilterManager() {
-        this.filterManager = new FilterManager(this.config.filterBoxId, {
-            searchType: this.filterType,
-            storageKey: this.config.storageKey,
-            onSearch: (filterString) => this.handleSearch(filterString),
-            onClear: () => this.handleSearch(''),
-            autoSave: true,
-            collapsible: true
-        });
-    }
-
-    // -------------------------  Search  ------------------------- //
-
-    async handleSearch(filterString) {
-        try {
-            this.showLoading(this.config.tableId, 'Loading tickets...');
-
-            const tickets = await this._fetchTickets(filterString);
-            this.tableManager.render(tickets);
-            this.filterManager.updateResultsCount(tickets.length);
-
-        } catch (error) {
-            console.error('Search failed:', error);
-            this.handleError('Failed to load tickets. Please try again.');
-            this.tableManager.renderEmptyState();
-        }
-    }
-
-    async _fetchTickets(filterString) {
-        const filters = this._parseFilterString(filterString);
-        console.log('filterString:', filterString);
-        console.log('filters dict:', filters);
-
-        return API.post('Ticket/GetTickets', API.authPayload({
-            myTicket: parseInt(sessionStorage.getItem(STORAGE_KEYS.MY_TICKETS) ?? '1'),
-            filters: filters
+    // ---- Data: fetch the full permitted set; saved-views slice it client-side ----
+    async _fetch() {
+        const data = await API.post('Ticket/GetTickets', API.authPayload({
+            myTicket: 0,          // 0 = all the user may see; "My open" is a client-side view
+            filters: {}
         }));
+        return Array.isArray(data) ? data : [];
     }
 
-    _parseFilterString(filterString) {
-        if (!filterString) return {};
-
-        const filters = {};
-        for (const part of filterString.split('|')) {
-            const [key, value] = part.split('`');
-            if (key && value !== undefined && value !== '')
-                filters[key] = value;
-        }
-        return filters;
-    }
-
-    // -------------------------  Navigation  ------------------------- //
-
-    handleTicketClick(data) {
-        console.log('handleTicketClick data:', data); // check ticketID value
-        const ticketId = data.linkedTicketID ?? data.ticketID;
-        console.log('resolved ticketId:', ticketId);  // check what's being saved
-
-        this.saveTicketId(ticketId);
-
-        if (data.linkedTicketID) {
-            this.saveTaskId(data.ticketID);  // Fix: ticketID not ticketId
-        }
-
+    // ---- Open a ticket: reuse the existing session + navigation flow ----
+    _open(row) {
+        this.saveTicketId(row.ticketID);
         this.navigateToTicketDetails();
     }
 
-    // -------------------------  Utility  ------------------------- //
+    // ---- Config consumed by QueueView ----
+    _config() {
+        const me = this.username;   // compared to assignedTech for the "My open" view
+        return {
+            title: 'Tickets',
+            fetch: () => this._fetch(),
+            rowKey: r => r.ticketID,
+            search: ['subject', 'userName', 'ticketID'],
 
-    async refresh() {
-        const currentFilter = this.filterManager.buildFilterParams();
-        await this.handleSearch(currentFilter);
-    }
+            views: [
+                { id: 'mine',  label: 'My open',     filter: r => r.assignedTech === me && TQisOpen(r) },
+                { id: 'unass', label: 'Unassigned',  filter: r => !r.assignedTech && TQisOpen(r) },
+                { id: 'reply', label: 'Needs reply', filter: r => r.notify && TQisOpen(r) },
+                { id: 'all',   label: 'All open',     filter: r => TQisOpen(r) },
+            ],
 
-    getTicketCount() {
-        return this.tableManager.getRowCount();
-    }
+            filters: [
+                { id: 'type', label: 'Type',     field: 'requestType' },
+                { id: 'prio', label: 'Priority', field: 'priority' },
+                { id: 'stat', label: 'Status',   field: 'status' },
+                { id: 'asg',  label: 'Assignee', field: 'assignedTech' },
+            ],
 
-    destroy() {
-        this.filterManager?.destroy();
-        this.tableManager?.destroy();
+            columns: [
+                {
+                    key: 'subject', label: 'Ticket', sortable: true,
+                    sortValue: r => (r.subject || '').toLowerCase(),
+                    render: r => `<div class="qv-subj">${r.notify ? '<span class="qv-unread" title="Awaiting reply"></span>' : ''}<div><div class="s1">${TQesc(r.subject)}</div><div class="s2"><span class="qv-ref">#${r.ticketID}</span> · ${TQesc(r.userName)}</div></div></div>`
+                },
+                {
+                    key: 'requestType', label: 'Type',
+                    render: r => `<span class="qv-badge">${TQesc(r.requestType)}</span>`
+                },
+                {
+                    key: 'priority', label: 'Priority', sortable: true,
+                    sortValue: r => TQ_PRIORITY_ORDER[r.priority] ?? 9,
+                    render: r => `<span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || '#999'}"></span>${TQesc(r.priority)}</span>`
+                },
+                {
+                    key: 'status', label: 'Status',
+                    render: r => {
+                        const c = TQ_STATUS_COLOR[r.status] || ['#5F5A52', '#E6E3DC'];
+                        return `<span class="qv-status" style="color:${c[0]};background:${c[1]}">${TQesc(r.status)}</span>`;
+                    }
+                },
+                {
+                    key: 'assignedTech', label: 'Assignee',
+                    render: r => r.assignedTech
+                        ? `<span class="qv-assignee"><span class="qv-av" style="background:${TQavColor(r.assignedTech)}">${TQinitials(r.assignedTech)}</span>${TQesc(r.assignedTech.split(' ')[0])}</span>`
+                        : '<span class="qv-unassigned">Unassigned</span>'
+                },
+                {
+                    key: 'updated', label: 'Updated', sortable: true,
+                    sortValue: r => new Date(r.updated).getTime() || 0,
+                    render: r => `<span class="qv-updated">${TQago(r.updated)}</span>`
+                },
+            ],
+
+            defaultSort: { key: 'updated', dir: -1 },
+
+            previewHeader: r => `<div class="qv-pv-tid">#${r.ticketID}</div><div class="qv-pv-title">${TQesc(r.subject)}</div>
+                <div class="qv-pv-meta"><span class="qv-badge">${TQesc(r.requestType)}</span>
+                <span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || '#999'}"></span>${TQesc(r.priority)}</span></div>`,
+            preview: r => `<h3 class="qv-pv-h">Requester</h3>
+                <div class="qv-assignee" style="margin-bottom:14px"><span class="qv-av" style="background:${TQavColor(r.userName)};width:28px;height:28px;font-size:10px">${TQinitials(r.userName)}</span><div><div style="font-weight:600;font-size:13px">${TQesc(r.userName)}</div><div style="font-size:11.5px;color:var(--muted, #6A655C)">${TQesc(r.authority)} · updated ${TQago(r.updated)}</div></div></div>
+                <h3 class="qv-pv-h">At a glance</h3>
+                <div style="font-size:12.5px;line-height:1.9"><div>Status&nbsp; ${TQesc(r.status)}</div><div>Assignee&nbsp; ${r.assignedTech ? TQesc(r.assignedTech) : '<span class="qv-unassigned">Unassigned</span>'}</div></div>`,
+            onOpen: r => this._open(r),
+        };
     }
 }
 
 // -------------------------  Init  ------------------------- //
 
-const ticketPage = new TicketPage();  // stored � accessible externally
-
-document.addEventListener('DOMContentLoaded', () => {
-    ticketPage.init();
-});
-
-// -------------------------  Global  ------------------------- //
-
-if (typeof window !== 'undefined') {
-    window.ticketPage = ticketPage;
-}
+const ticketPage = new TicketPage();
+document.addEventListener('DOMContentLoaded', () => ticketPage.init());
+if (typeof window !== 'undefined') window.ticketPage = ticketPage;
