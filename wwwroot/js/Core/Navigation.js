@@ -9,6 +9,7 @@ const Nav = {
 
     toAdminPage() { Nav._navigate('/AdminPage'); },
     toTicketPage() { Nav._navigate('/TicketPage'); },
+    toTasksPage() { Nav._navigate('/Tasks'); },
     toCreateRFC() { Nav._navigate('/CreateRFC'); },
     toCreateTicket() { Nav._navigate('/CreateTicket'); },
     toRFC() { Nav._navigate('/RFC'); },
@@ -29,6 +30,7 @@ const Nav = {
 
 function AdminPageView() { Nav.toAdminPage(); }
 function TicketPageView() { Nav.toTicketPage(); }
+function TasksPageView() { Nav.toTasksPage(); }
 function CreateRFCView() { Nav.toCreateRFC(); }
 function CreateTicketView() { Nav.toCreateTicket(); }
 function RFCView() { Nav.toRFC(); }

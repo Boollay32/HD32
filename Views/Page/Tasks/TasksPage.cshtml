@@ -1,0 +1,13 @@
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section AddCSSToHead {
+    <link rel="stylesheet" type="text/css" href="~/css/Addons/Queue.css" asp-append-version="true" />
+}
+
+@section AddJSToBody {
+    <script src="~/js/Pages/Tasks/TasksPage.js" asp-append-version="true"></script>
+}
+
+<div id="queue-mount" class="qv--page"></div>
