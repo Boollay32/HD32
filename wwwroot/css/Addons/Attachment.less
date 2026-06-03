@@ -1,0 +1,73 @@
+﻿.shadow-Icon {
+    -webkit-box-shadow: -1px 1px 5px 0px rgba(0,0,0,0.2);
+    -moz-box-shadow: -1px 1px 1px 0px rgba(0,0,0,0.2);
+    box-shadow: -1px 1px 1px 0px rgba(0,0,0,0.2);
+}
+
+.FileUP {
+    opacity: 0;
+}
+
+#AttachBin {
+    width: 59px;
+    position: relative;
+    float: left;
+    padding-top:10px;
+}
+
+#Attach-Div{
+    width:100%;
+}
+
+.Attachment-Icon[name="Original"] {
+    background-color: orange;
+}
+
+.Attachment-Icon {
+    position: relative;
+    float: left;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    margin-right: 5px;
+    margin-left: 5px;
+    cursor:pointer;
+   //.shadow-Icon;
+    
+    .FileUP {
+        position: absolute;
+        height: 25px;
+        width: 25px;
+        float: left;
+        padding: 0;
+        margin-bottom: 0px;
+        background-color: black;
+        opacity: 0;
+        z-index: 130;
+    }
+
+    .File-ImageUnset {
+        z-index: 100;
+        position: absolute;
+        float: left;
+        height: 25px;
+        width: 25px;
+
+        img {
+            left: 0;
+            position: absolute;
+            float: left;
+            height: 25px;
+            width: 25px;
+        }
+    }
+
+    .File-ImageSet {
+        z-index: 100;
+        position: absolute;
+        float: left;
+        height: 25px;
+        width: 25px;
+    }
+}

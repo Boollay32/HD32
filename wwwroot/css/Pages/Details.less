@@ -1,0 +1,654 @@
+﻿@card-bg: #ffffff;
+@border-color: #e0e0e0;
+@label-color: #6b7280;
+@value-color: #111827;
+@title-color: #1e40af;
+@card-shadow: 0 1px 4px rgba(0,0,0,0.08);
+@radius: 8px;
+
+// -------------------------  Container  ------------------------- //
+
+#Detail-Container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+}
+
+#Detail-Header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: @title-color;
+    color: #fff;
+    flex-shrink: 0;
+
+    a {
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    #header-buttons {
+        display: flex;
+        gap: 10px;
+    }
+}
+
+#Detail-Body {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+// -------------------------  Split Layout  ------------------------- //
+
+#Detail-Split {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+#UpdateTicket {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: flex 0.25s ease;
+    min-width: 0;
+}
+
+#Detail-Inner {
+    flex: 1;
+    display: flex;
+    gap: 20px;
+    padding: 16px;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+// -------------------------  Columns  ------------------------- //
+
+#Details-Left {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 380px;
+    min-width: 320px;
+    overflow-y: auto;
+    height: 100%;
+    flex-shrink: 0;
+}
+
+#Details-Right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+    height: 100%;
+    min-width: 0;
+
+    .Section-Card.full-height {
+        flex: 1;
+        min-height: 0;
+
+        .Field-Row.stack {
+            flex: 1;
+
+            textarea {
+                flex: 1;
+                min-height: 200px;
+                resize: vertical;
+            }
+        }
+    }
+}
+
+// -------------------------  Messages Panel  ------------------------- //
+
+#Messages-Panel {
+    width: 0;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid @border-color;
+    background: #fff;
+    box-shadow: -4px 0 16px rgba(0,0,0,0.08);
+    transition: width 0.25s ease;
+
+    &:not(.hidden) {
+        width: 55%;
+    }
+
+    &.hidden {
+        width: 0;
+        border-left: none;
+    }
+}
+
+#Messages-Header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid @border-color;
+    font-weight: 600;
+    font-size: 14px;
+    color: @title-color;
+    flex-shrink: 0;
+    white-space: nowrap;
+
+    button {
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        color: @value-color;
+
+        &:hover {
+            color: @title-color;
+        }
+    }
+}
+
+#Messages-Thread {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 0;
+}
+
+.msg-bubble {
+    max-width: 75%;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+
+    .msg-meta {
+        font-size: 11px;
+        opacity: 0.65;
+        margin-bottom: 4px;
+        font-weight: 500;
+    }
+
+    .msg-body {
+        word-break: break-word;
+    }
+
+    .msg-attachments {
+        margin-top: 8px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    &.msg-tech {
+        align-self: flex-end;
+        background: #dbeafe;
+        border-bottom-right-radius: 3px;
+        color: #1e3a5f;
+    }
+
+    &.msg-client {
+        align-self: flex-start;
+        background: #f3f4f6;
+        border-bottom-left-radius: 3px;
+        color: #374151;
+    }
+
+    &.msg-internal {
+        align-self: flex-end;
+        background: #fef9c3;
+        border-bottom-right-radius: 3px;
+        color: #713f12;
+        border: 1px dashed #ca8a04;
+
+        &::before {
+            content: '🔒 Internal';
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #92400e;
+        }
+    }
+}
+
+#Messages-Compose {
+    border-top: 1px solid @border-color;
+    padding: 12px 16px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    white-space: nowrap;
+
+    textarea {
+        width: 100%;
+        height: 100px;
+        resize: vertical;
+        border: 1px solid @border-color;
+        border-radius: 6px;
+        padding: 8px;
+        font-size: 13px;
+        font-family: inherit;
+        color: @value-color;
+        box-sizing: border-box;
+        white-space: normal;
+
+        &:focus {
+            outline: none;
+            border-color: @title-color;
+        }
+    }
+}
+
+#Messages-CharCount {
+    font-size: 11px;
+    color: #9ca3af;
+    text-align: right;
+}
+
+#Messages-Attachments {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+#Messages-Footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .visibility-toggle {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: @value-color;
+        cursor: pointer;
+    }
+}
+
+// -------------------------  Action Bar  ------------------------- //
+
+#Ticket-ActionBar {
+    display: flex;
+    gap: 10px;
+    padding: 10px 16px;
+    background: #f9fafb;
+    border-bottom: 1px solid @border-color;
+    flex-shrink: 0;
+
+    .action-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 16px;
+        border: 1px solid @border-color;
+        border-radius: 6px;
+        background: #fff;
+        font-size: 13px;
+        font-weight: 500;
+        color: @value-color;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.15s ease;
+
+        &:hover {
+            background: #f3f4f6;
+            border-color: @title-color;
+            color: @title-color;
+        }
+
+        &.has-unread {
+            border-color: #dc2626;
+            color: #dc2626;
+            background: #fef2f2;
+        }
+    }
+
+    .action-badge {
+        background: #dc2626;
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 10px;
+
+        &.hidden {
+            display: none;
+        }
+    }
+}
+
+// -------------------------  Cards  ------------------------- //
+
+.Section-Card {
+    background: @card-bg;
+    border: 1px solid @border-color;
+    border-radius: @radius;
+    box-shadow: @card-shadow;
+    padding: 16px;
+
+    &.full-height {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+}
+
+.Section-Title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: @title-color;
+    border-bottom: 1px solid @border-color;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+}
+
+.Field-Row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0;
+    border-bottom: 1px solid #f3f4f6;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &.stack {
+        flex-direction: column;
+        align-items: flex-start;
+        flex: 1;
+        min-height: 0;
+    }
+}
+
+.Field-Label {
+    font-size: 12px;
+    color: @label-color;
+    font-weight: 500;
+    min-width: 110px;
+    flex-shrink: 0;
+}
+
+.Field-Value {
+    font-size: 13px;
+    color: @value-color;
+    flex: 1;
+    min-width: 0;
+    word-break: break-word;
+
+    &:is(input, select, textarea) {
+        border: 1px solid @border-color;
+        border-radius: 4px;
+        padding: 4px 8px;
+        width: 100%;
+        font-size: 13px;
+        background: #f9fafb;
+        box-sizing: border-box;
+
+        &:not([disabled]):focus {
+            outline: none;
+            border-color: @title-color;
+            background: #fff;
+        }
+
+        &[disabled] {
+            background: #f3f4f6;
+            color: #6b7280;
+            cursor: default;
+        }
+    }
+
+    &:is(textarea) {
+        min-height: 120px;
+        resize: vertical;
+        flex: 1;
+        width: 100%;
+    }
+}
+
+// -------------------------  Note Panel  ------------------------- //
+
+#CreateNote-Div {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: #fff;
+    border-radius: @radius;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    z-index: 1000;
+    flex-direction: column;
+    overflow: hidden;
+
+    &.active {
+        display: flex;
+    }
+}
+
+#CreateNote-Inner {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 12px;
+    height: 100%;
+    overflow: hidden;
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        flex: 1;
+        overflow: hidden;
+    }
+}
+
+#NewNoteText {
+    width: 100%;
+    flex: 1;
+    min-height: 150px;
+    resize: vertical;
+    border: 1px solid @border-color;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 13px;
+    font-family: inherit;
+    box-sizing: border-box;
+
+    &:focus {
+        outline: none;
+        border-color: @title-color;
+    }
+}
+
+#NoteInstruction {
+    font-size: 12px;
+    color: @label-color;
+}
+
+#Text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-height: 0;
+}
+
+
+// -------------------------  Task Panel  ------------------------- //
+
+#CreateTask-Div {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 860px;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: #fff;
+    border-radius: @radius;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+
+    &.active {
+        display: flex;
+    }
+}
+
+#CreateTask-Inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.Task-Header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: @title-color;
+    color: #fff;
+    cursor: grab;
+
+    &:active {
+        cursor: grabbing;
+    }
+}
+
+.Task-Title {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+}
+
+.Task-ID-Badge {
+    font-size: 12px;
+    background: rgba(255,255,255,0.2);
+    padding: 3px 10px;
+    border-radius: 12px;
+}
+
+.Task-Body {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.Task-Column {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 16px;
+    min-width: 0;
+}
+
+.checkbox-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.task-checkbox {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: @title-color;
+}
+
+.checkbox-label {
+    font-size: 13px;
+    color: @value-color;
+    cursor: pointer;
+}
+
+#Task-Buttons {
+    display: flex;
+    gap: 10px;
+    padding: 12px 20px;
+    border-top: 1px solid @border-color;
+    background: #f9fafb;
+    justify-content: flex-end;
+}
+
+// -------------------------  Buttons  ------------------------- //
+
+button.accept {
+    background: @title-color;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 7px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+
+    &:hover {
+        background: darken(@title-color, 8%);
+    }
+
+    &:disabled {
+        background: #9ca3af;
+        cursor: default;
+    }
+}
+
+button.cancel {
+    background: #fff;
+    color: #374151;
+    border: 1px solid @border-color;
+    border-radius: 4px;
+    padding: 7px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+
+    &:hover {
+        background: #f3f4f6;
+    }
+}
+
+button.hidden, .hidden {
+    display: none !important;
+}
+
+// -------------------------  Legacy Overrides  ------------------------- //
+
+.Detail-Div {
+    all: unset;
+    display: contents;
+}
+
+.left, .right {
+    all: unset;
+}
+
+label.Name {
+    all: unset;
+}

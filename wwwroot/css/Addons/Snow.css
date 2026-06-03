@@ -1,0 +1,196 @@
+﻿/**
+ * Snow.css
+ * Modern Christmas snow effect
+ * Version: 2.0
+ */
+
+/* ============= Snow Overlay Container ============= */
+#snow-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+/* ============= Snowflake Base Styles ============= */
+.snowflake {
+    position: absolute;
+    top: -20px;
+    background-color: white;
+    border-radius: 50%;
+    opacity: 0.8;
+    pointer-events: none;
+    will-change: transform, opacity;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* ============= Snowfall Animations ============= */
+
+/* Main snowfall - straight down with gentle sway */
+@keyframes snowfall {
+    0% {
+        transform: translateY(-20px) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.8;
+    }
+
+    90% {
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translateY(100vh) translateX(50px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Diagonal snowfall - more wind effect */
+@keyframes snowfall-diagonal {
+    0% {
+        transform: translateY(-20px) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.8;
+    }
+
+    90% {
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translateY(100vh) translateX(100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Gentle sway - for lighter snowflakes */
+@keyframes snowfall-sway {
+    0% {
+        transform: translateY(-20px) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.8;
+    }
+
+    25% {
+        transform: translateY(25vh) translateX(-20px) rotate(90deg);
+    }
+
+    50% {
+        transform: translateY(50vh) translateX(20px) rotate(180deg);
+    }
+
+    75% {
+        transform: translateY(75vh) translateX(-20px) rotate(270deg);
+    }
+
+    90% {
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translateY(100vh) translateX(0) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* ============= Depth Layers ============= */
+
+/* Near snowflakes - larger, faster, more blur */
+.snowflake.near {
+    filter: blur(1px);
+    opacity: 0.9;
+    animation: snowfall 3s linear infinite;
+}
+
+/* Medium snowflakes - normal size and speed */
+.snowflake.medium {
+    filter: blur(0.5px);
+    opacity: 0.8;
+    animation: snowfall-diagonal 5s linear infinite;
+}
+
+/* Far snowflakes - smaller, slower, less blur */
+.snowflake.far {
+    filter: blur(0.3px);
+    opacity: 0.6;
+    animation: snowfall-sway 7s linear infinite;
+}
+
+/* ============= Size Variations ============= */
+.snowflake.size-small {
+    width: 3px;
+    height: 3px;
+}
+
+.snowflake.size-medium {
+    width: 5px;
+    height: 5px;
+}
+
+.snowflake.size-large {
+    width: 8px;
+    height: 8px;
+}
+
+/* ============= Special Snowflake Styles ============= */
+
+/* Sparkle effect for some snowflakes */
+@keyframes sparkle {
+    0%, 100% {
+        opacity: 0.6;
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    }
+
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+    }
+}
+
+.snowflake.sparkle {
+    animation: snowfall 5s linear infinite, sparkle 2s ease-in-out infinite;
+}
+
+/* ============= Performance Optimizations ============= */
+.snowflake {
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* ============= Responsive Adjustments ============= */
+@media screen and (max-width: 768px) {
+    /* Reduce snowflakes on mobile for performance */
+    .snowflake:nth-child(n+30) {
+        display: none;
+    }
+}
+
+/* ============= Optional: Navbar Snow Overlay ============= */
+/* If you want snow specifically over the navbar */
+#navbar-snow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 56px; /* Match new navbar height */
+    pointer-events: none;
+    z-index: 1001; /* Above navbar (1000) */
+    overflow: hidden;
+}
+
+    #navbar-snow .snowflake {
+        /* Adjust animation for navbar area only */
+        animation-duration: 2s !important;
+    }

@@ -1,0 +1,2173 @@
+// =====================  TicketDetails.less  ===================== //
+@import "../Core/Variables.less";
+
+// -------------------------  Reset  ------------------------- //
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+// -------------------------  Accessibility  ------------------------- //
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+:focus-visible {
+    outline: 3px solid @focus;
+    outline-offset: 2px;
+    border-radius: @radius-sm;
+}
+
+.skip-link {
+    position: absolute;
+    left: 8px;
+    top: -48px;
+    z-index: 200;
+    background: @ink;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 0 0 @radius @radius;
+    font-weight: 600;
+    font-size: @text-base;
+    text-decoration: none;
+    transition: top @transition;
+
+    &:focus {
+        top: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+// -------------------------  Base  ------------------------- //
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: @ui;
+    background: @canvas;
+    color: @ink;
+    font-size: 14px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+}
+
+.mono {
+    font-family: @mono;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@keyframes rise {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+// -------------------------  App  ------------------------- //
+
+.td-app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+// -------------------------  Topbar  ------------------------- //
+
+.td-topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 18px;
+    height: @topbar-height;
+    flex-shrink: 0;
+    background: @panel;
+    border-bottom: 1px solid @line;
+    z-index: 20;
+}
+
+.td-back {
+    width: 34px;
+    height: 34px;
+    border-radius: @radius;
+    display: grid;
+    place-items: center;
+    color: @ink-2;
+    border: 1px solid @line;
+    background: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background @transition, color @transition;
+
+    &:hover {
+        background: @panel-2;
+        color: @ink;
+    }
+}
+
+.td-id-block {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 1px;
+
+    .td-tid {
+        font-family: @mono;
+        font-size: @text-xs;
+        color: @muted;
+        letter-spacing: .04em;
+    }
+
+    .td-title {
+        font-weight: 600;
+        font-size: @text-lg;
+        letter-spacing: -.01em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 34vw;
+        line-height: 1.25;
+    }
+}
+
+// -------------------------  Topbar Meta Pills  ------------------------- //
+
+.td-topbar-meta {
+    display: flex;
+    align-items: center;
+    gap: @space-2;
+    flex-shrink: 0;
+}
+
+.td-meta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: @text-sm;
+    font-weight: 600;
+    padding: 5px 11px;
+    border-radius: @radius-pill;
+    white-space: nowrap;
+
+    .td-led {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+    // Status
+    &.status-open {
+        background: @blue-bg;
+        color: @blue;
+
+        .td-led {
+            background: @blue;
+        }
+    }
+
+    &.status-pending {
+        background: @amber-bg;
+        color: @amber;
+
+        .td-led {
+            background: @amber;
+        }
+    }
+
+    &.status-resolved {
+        background: @green-bg;
+        color: @green;
+
+        .td-led {
+            background: @green;
+        }
+    }
+
+    &.status-closed {
+        background: @grey-bg;
+        color: @grey;
+
+        .td-led {
+            background: @grey;
+        }
+    }
+    // Priority
+    &.priority-high {
+        background: @red-bg;
+        color: @red;
+    }
+
+    &.priority-medium {
+        background: @amber-bg;
+        color: @amber;
+    }
+
+    &.priority-low {
+        background: @green-bg;
+        color: @green;
+    }
+    // SLA
+    &.sla-ok {
+        background: @green-bg;
+        color: @green;
+    }
+
+    &.sla-warning {
+        background: @amber-bg;
+        color: @amber;
+    }
+
+    &.sla-breach {
+        background: @red-bg;
+        color: @red;
+    }
+}
+
+.td-spacer {
+    flex: 1;
+}
+
+// -------------------------  Topbar Actions  ------------------------- //
+
+.td-topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: @space-2;
+    flex-shrink: 0;
+}
+
+// -------------------------  Buttons  ------------------------- //
+
+.td-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: @ui;
+    font-size: @text-base;
+    font-weight: 600;
+    color: #fff;
+    background: @accent;
+    border: none;
+    border-radius: @radius;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background @transition;
+
+    &:hover {
+        background: @accent-ink;
+    }
+
+    &:disabled {
+        opacity: .45;
+        cursor: not-allowed;
+    }
+}
+
+.td-btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: @ui;
+    font-size: @text-base;
+    font-weight: 600;
+    color: @ink-2;
+    background: none;
+    border: 1px solid @line;
+    border-radius: @radius;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: background @transition, color @transition, border-color @transition;
+
+    &:hover {
+        background: @panel-2;
+        color: @ink;
+    }
+
+    &:disabled {
+        opacity: .45;
+        cursor: not-allowed;
+    }
+}
+
+// -------------------------  Shell  ------------------------- //
+
+.td-shell {
+    display: grid;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    // Layout variants set by JS via data-layout attribute
+    &[data-layout="both"] {
+        grid-template-columns: 1fr @right-pane-width;
+    }
+
+    &[data-layout="left-only"] {
+        grid-template-columns: 1fr;
+
+        .td-pane--right {
+            display: none;
+        }
+    }
+
+    &[data-layout="right-only"] {
+        grid-template-columns: 1fr;
+
+        .td-pane--left {
+            display: none;
+        }
+    }
+}
+
+// -------------------------  Panes  ------------------------- //
+
+.td-pane {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    background: @panel;
+    transition: width @transition-lg;
+
+    &--left {
+        border-right: 1px solid @line;
+    }
+
+    &--right {
+        background: @panel-2;
+    }
+}
+
+.td-pane-head {
+    display: flex;
+    align-items: center;
+    gap: @space-2;
+    padding: 0 16px;
+    height: 46px;
+    flex-shrink: 0;
+    border-bottom: 1px solid @line-2;
+}
+
+.td-pane-title {
+    font-size: @text-base;
+    font-weight: 700;
+    color: @ink;
+    letter-spacing: -.01em;
+    flex: 1;
+}
+
+.td-unread-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: @radius-pill;
+    background: @accent;
+    color: #fff;
+    font-family: @mono;
+    font-size: @text-xs;
+    font-weight: 700;
+    animation: rise @transition-md both;
+}
+
+.td-collapse-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: @radius-sm;
+    display: grid;
+    place-items: center;
+    color: @muted;
+    border: none;
+    background: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background @transition, color @transition;
+
+    &:hover {
+        background: @line-2;
+        color: @ink;
+    }
+}
+
+.td-pane-inner {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+// -------------------------  Rail  ------------------------- //
+
+.td-rail {
+    display: none; // shown only when pane is collapsed
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: @space-2;
+    width: @rail-width;
+    background: @panel;
+    border-right: 1px solid @line;
+    cursor: pointer;
+    padding: @space-3 0;
+
+    .td-rail-label {
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        transform: rotate(180deg);
+        font-size: @text-xs;
+        font-weight: 700;
+        color: @muted;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+    }
+
+    .td-rail-pip {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: @accent;
+    }
+}
+
+// Collapsed state — toggled by JS
+.td-pane--left.is-collapsed {
+    width: @rail-width;
+    min-width: @rail-width;
+    flex-shrink: 0;
+
+    .td-pane-head,
+    .td-pane-inner {
+        display: none;
+    }
+
+    .td-rail {
+        display: flex;
+    }
+}
+
+.td-pane--right.is-collapsed {
+    width: @rail-width;
+    min-width: @rail-width;
+    flex-shrink: 0;
+
+    .td-pane-head,
+    .td-pane-inner {
+        display: none;
+    }
+
+    .td-rail {
+        display: flex;
+    }
+}
+
+// -------------------------  Workspace Tabs  ------------------------- //
+
+.td-ws-tabs {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 8px 12px 0;
+    flex-shrink: 0;
+    border-bottom: 1px solid @line-2;
+    background: @panel-2;
+
+    [role="tab"] {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-family: @ui;
+        font-size: @text-sm;
+        font-weight: 600;
+        color: @muted;
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        padding: 7px 10px 9px;
+        cursor: pointer;
+        border-radius: @radius-sm @radius-sm 0 0;
+        transition: color @transition, background @transition, border-color @transition;
+        position: relative;
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        &:hover {
+            color: @ink;
+            background: @line-2;
+        }
+
+        &[aria-selected="true"] {
+            color: @accent;
+            border-bottom-color: @accent;
+            background: @panel;
+        }
+    }
+}
+
+.td-tab-pip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: @radius-pill;
+    background: @accent;
+    color: #fff;
+    font-family: @mono;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+// -------------------------  Workspace Body  ------------------------- //
+
+.td-ws-body {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.td-ws-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: @space-4;
+    gap: @space-3;
+    animation: rise @transition-md both;
+    // Scrollbar
+    scrollbar-width: thin;
+    scrollbar-color: @line transparent;
+
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: @line;
+        border-radius: 99px;
+    }
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+// -------------------------  Message Thread  ------------------------- //
+
+.td-thread {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: @space-4 @space-4 @space-2;
+    display: flex;
+    flex-direction: column;
+    gap: @space-3;
+    // Scrollbar
+    scrollbar-width: thin;
+    scrollbar-color: @line transparent;
+
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: @line;
+        border-radius: 99px;
+    }
+}
+
+// -------------------------  Bubbles  ------------------------- //
+
+.td-bubble-row {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    animation: rise @transition-md both;
+
+    &--out {
+        align-items: flex-end;
+
+        .td-bubble {
+            background: @accent;
+            color: #fff;
+            border-radius: @radius-lg @radius-lg @radius-sm @radius-lg;
+
+            a {
+                color: #fff;
+                text-decoration: underline;
+            }
+        }
+
+        .td-bubble-meta {
+            justify-content: flex-end;
+        }
+    }
+
+    &--in {
+        align-items: flex-start;
+
+        .td-bubble {
+            background: @panel-2;
+            color: @ink;
+            border: 1px solid @line-2;
+            border-radius: @radius-lg @radius-lg @radius-lg @radius-sm;
+        }
+
+        .td-bubble-meta {
+            justify-content: flex-start;
+        }
+    }
+}
+
+.td-bubble-sender {
+    font-size: @text-xs;
+    font-weight: 700;
+    color: @muted;
+    padding: 0 4px;
+    letter-spacing: .01em;
+}
+
+.td-bubble {
+    max-width: 78%;
+    padding: 10px 14px;
+    font-size: @text-base;
+    line-height: 1.5;
+    word-break: break-word;
+    white-space: pre-wrap;
+    box-shadow: @shadow;
+}
+
+.td-bubble-meta {
+    display: flex;
+    align-items: center;
+    gap: @space-2;
+    padding: 0 4px;
+}
+
+.td-bubble-time {
+    font-family: @mono;
+    font-size: @text-xs;
+    color: @muted;
+}
+
+.td-bubble-status {
+    font-size: @text-xs;
+    color: @muted;
+
+    &.delivered {
+        color: @green;
+    }
+
+    &.read {
+        color: @accent;
+    }
+}
+
+// -------------------------  Bubble Attachments  ------------------------- //
+
+.td-bubble-attachments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: @space-2;
+    margin-top: @space-2;
+}
+
+.td-bubble-file {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: @radius-sm;
+    font-size: @text-sm;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background @transition;
+
+    .td-bubble-row--out & {
+        background: rgba(255,255,255,.18);
+        color: #fff;
+        border: 1px solid rgba(255,255,255,.25);
+
+        &:hover {
+            background: rgba(255,255,255,.28);
+        }
+    }
+
+    .td-bubble-row--in & {
+        background: @panel;
+        color: @ink-2;
+        border: 1px solid @line;
+
+        &:hover {
+            background: @line-2;
+        }
+    }
+}
+
+// -------------------------  Date Divider  ------------------------- //
+
+.td-date-divider {
+    display: flex;
+    align-items: center;
+    gap: @space-3;
+    padding: @space-2 0;
+
+    &::before, &::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: @line-2;
+    }
+
+    span {
+        font-family: @mono;
+        font-size: @text-xs;
+        color: @muted;
+        white-space: nowrap;
+        letter-spacing: .04em;
+    }
+}
+
+// -------------------------  Empty Thread  ------------------------- //
+
+.td-thread-empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: @space-3;
+    color: @muted;
+    padding: @space-6;
+
+    svg {
+        opacity: .35;
+    }
+
+    p {
+        font-size: @text-base;
+        font-weight: 600;
+        text-align: center;
+    }
+}
+
+// -------------------------  Composer Dock  ------------------------- //
+
+.td-composer-dock {
+    flex-shrink: 0;
+    border-top: 1px solid @line-2;
+    background: @panel;
+    padding: @space-3 @space-4;
+    display: flex;
+    flex-direction: column;
+    gap: @space-2;
+}
+
+.td-composer {
+    display: flex;
+    align-items: flex-end;
+    gap: @space-2;
+    background: @panel-2;
+    border: 1px solid @line;
+    border-radius: @radius-lg;
+    padding: 8px 8px 8px 14px;
+    transition: border-color @transition, box-shadow @transition;
+
+    &:focus-within {
+        border-color: @accent;
+        box-shadow: 0 0 0 3px @accent-soft;
+    }
+}
+
+.td-composer-input {
+    flex: 1;
+    font-family: @ui;
+    font-size: @text-base;
+    color: @ink;
+    background: none;
+    border: none;
+    outline: none;
+    resize: none;
+    line-height: 1.5;
+    max-height: 160px;
+    overflow-y: auto;
+
+    &::placeholder {
+        color: @muted;
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: @line transparent;
+}
+
+.td-send-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: @radius;
+    display: grid;
+    place-items: center;
+    background: @accent;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background @transition, opacity @transition;
+
+    &:hover {
+        background: @accent-ink;
+    }
+
+    &:disabled {
+        opacity: .35;
+        cursor: not-allowed;
+    }
+}
+
+// -------------------------  Composer Footer  ------------------------- //
+
+.td-composer-footer {
+    display: flex;
+    align-items: center;
+    gap: @space-2;
+    padding: 0 2px;
+}
+
+.td-charcount {
+    font-family: @mono;
+    font-size: @text-xs;
+    color: @muted;
+    flex: 1;
+
+    &.is-near-limit {
+        color: @amber;
+    }
+
+    &.is-at-limit {
+        color: @red;
+        font-weight: 700;
+    }
+}
+
+.td-composer-attachments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: @space-1;
+}
+
+.td-attach-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px;
+    border-radius: @radius-sm;
+    background: @panel-2;
+    border: 1px solid @line;
+    font-size: @text-xs;
+    font-weight: 600;
+    color: @ink-2;
+    max-width: 160px;
+
+    span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: @muted;
+        display: grid;
+        place-items: center;
+        padding: 0;
+        flex-shrink: 0;
+        transition: color @transition;
+
+        &:hover {
+            color: @red;
+        }
+    }
+}
+
+.td-attach-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: @radius-sm;
+    display: grid;
+    place-items: center;
+    color: @muted;
+    cursor: pointer;
+    transition: background @transition, color @transition;
+    flex-shrink: 0;
+
+    &:hover {
+        background: @line-2;
+        color: @ink;
+    }
+}
+
+.td-scroll-unread-btn {
+    display: flex;
+    align-items: center;
+    gap: @space-2;
+    margin: 0 @space-4 @space-2;
+    padding: 8px 14px;
+    background: @accent;
+    color: #fff;
+    border: none;
+    border-radius: @radius-pill;
+    font-family: @ui;
+    font-size: @text-sm;
+    font-weight: 700;
+    cursor: pointer;
+    align-self: center;
+    transition: background @transition;
+    animation: rise @transition-md both;
+
+    &:hover {
+        background: @accent-ink;
+    }
+
+    &.hidden {
+        display: none;
+    }
+}
+
+.td-composer-dock.is-dragover {
+    background: @accent-soft;
+    border-color: @accent;
+    outline: 2px dashed @accent;
+    outline-offset: -4px;
+}
+
+// -------------------------  Notification Banner  ------------------------- //
+
+.td-notify-banner {
+    display: flex;
+    align-items: center;
+    gap: @space-3;
+    padding: 10px 14px;
+    background: @amber-bg;
+    border: 1px solid @amber-border;
+    border-radius: @radius;
+    font-size: @text-sm;
+    font-weight: 600;
+    color: @amber;
+    animation: rise @transition-md both;
+    margin: @space-3 @space-4 0;
+
+    svg {
+        flex-shrink: 0;
+    }
+
+    button {
+        margin-left: auto;
+        background: none;
+        border: none;
+        font-family: @ui;
+        font-size: @text-sm;
+        font-weight: 700;
+        color: @amber;
+        cursor: pointer;
+        text-decoration: underline;
+        padding: 0;
+
+        &:hover {
+            color: @accent-ink;
+        }
+    }
+}
+
+// -------------------------  Notes Tab  ------------------------- //
+
+.td-scope-note {
+    display: flex;
+    align-items: center;
+    gap: @space-2;
+    padding: 8px 12px;
+    background: @amber-bg;
+    border: 1px solid @amber-border;
+    border-radius: @radius;
+    font-size: @text-sm;
+    font-weight: 600;
+    color: @amber;
+    flex-shrink: 0;
+}
+
+// -------------------------  Note Thread  ------------------------- //
+
+.td-note-thread {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: @space-3;
+    padding-bottom: @space-2;
+    scrollbar-width: thin;
+    scrollbar-color: @line transparent;
+
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: @line;
+        border-radius: 99px;
+    }
+}
+
+// -------------------------  Note Card  ------------------------- //
+
+.td-note-card {
+    display: flex;
+    flex-direction: column;
+    gap: @space-2;
+    background: @panel;
+    border: 1px solid @line-2;
+    border-radius: @radius;
+    padding: 12px 14px;
+    box-shadow: @shadow;
+    animation: rise @transition-md both;
+
+    &.is-visible-to-client {
+        border-left: 3px solid @accent;
+    }
+}
+
+.td-note-head {
+    display: flex;
+    align-items: center;
+    gap: @space-2;
+}
+
+.td-note-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: @accent-soft;
+    color: @accent-ink;
+    font-size: @text-xs;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    letter-spacing: .02em;
+}
+
+.td-note-author {
+    font-size: @text-sm;
+    font-weight: 700;
+    color: @ink;
+    flex: 1;
+}
+
+.td-note-time {
+    font-family: @mono;
+    font-size: @text-xs;
+    color: @muted;
+}
+
+.td-note-visible-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    color: @accent;
+    background: @accent-soft;
+    padding: 3px 7px;
+    border-radius: @radius-pill;
+    letter-spacing: .02em;
+}
+
+.td-note-body {
+    font-size: @text-base;
+    color: @ink;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.td-note-attachments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: @space-2;
+    margin-top: @space-1;
+}
+
+.td-note-file {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: @radius-sm;
+    background: @panel-2;
+    border: 1px solid @line;
+    font-size: @text-sm;
+    font-weight: 600;
+    color: @ink-2;
+    text-decoration: none;
+    transition: background @transition;
+
+    &:hover {
+        background: @line-2;
+    }
+}
+
+// -------------------------  Note Composer  ------------------------- //
+
+.td-note-compose {
+    display: flex;
+    align-items: flex-end;
+    gap: @space-2;
+    background: @panel;
+    border: 1px solid @line;
+    border-radius: @radius-lg;
+    padding: 8px 8px 8px 14px;
+    flex-shrink: 0;
+    transition: border-color @transition, box-shadow @transition;
+
+    &:focus-within {
+        border-color: @accent;
+        box-shadow: 0 0 0 3px @accent-soft;
+    }
+}
+
+.td-note-input {
+    flex: 1;
+    font-family: @ui;
+    font-size: @text-base;
+    color: @ink;
+    background: none;
+    border: none;
+    outline: none;
+    resize: none;
+    line-height: 1.5;
+    max-height: 140px;
+    overflow-y: auto;
+
+    &::placeholder {
+        color: @muted;
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: @line transparent;
+}
+
+.td-note-add-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: @radius;
+    display: grid;
+    place-items: center;
+    background: @accent;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background @transition, opacity @transition;
+
+    &:hover {
+        background: @accent-ink;
+    }
+
+    &:disabled {
+        opacity: .35;
+        cursor: not-allowed;
+    }
+}
+
+.td-visibility-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: @radius-sm;
+    display: grid;
+    place-items: center;
+    color: @muted;
+    border: 1px solid @line;
+    background: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background @transition, color @transition, border-color @transition;
+
+    &:hover {
+        background: @line-2;
+        color: @ink;
+    }
+
+    &[aria-pressed="true"] {
+        background: @accent-soft;
+        color: @accent;
+        border-color: @accent;
+    }
+}
+
+// -------------------------  Tasks Tab  ------------------------- //
+
+.td-progress-track {
+    height: 5px;
+    background: @line-2;
+    border-radius: 99px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.td-progress-fill {
+    height: 100%;
+    background: @accent;
+    border-radius: 99px;
+    transition: width @transition-lg;
+}
+
+.td-progress-label {
+    font-family: @mono;
+    font-size: @text-xs;
+    color: @muted;
+    text-align: right;
+    margin-top: -@space-1;
+}
+
+// -------------------------  Task List  ------------------------- //
+
+.td-task-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: @space-2;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: @line transparent;
+
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: @line;
+        border-radius: 99px;
+    }
+}
+
+// -------------------------  Task Item  ------------------------- //
+
+.td-task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: @space-3;
+    background: @panel;
+    border: 1px solid @line-2;
+    border-radius: @radius;
+    padding: 10px 12px;
+    box-shadow: @shadow;
+    animation: rise @transition-md both;
+    transition: border-color @transition;
+
+    &:hover {
+        border-color: @line;
+    }
+
+    &.is-complete {
+        opacity: .6;
+
+        .td-task-title {
+            text-decoration: line-through;
+            color: @muted;
+        }
+    }
+}
+
+.td-task-check {
+    width: 18px;
+    height: 18px;
+    border-radius: @radius-sm;
+    border: 2px solid @line;
+    background: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: grid;
+    place-items: center;
+    transition: background @transition, border-color @transition;
+
+    svg {
+        display: none;
+    }
+
+    &.is-checked {
+        background: @accent;
+        border-color: @accent;
+
+        svg {
+            display: block;
+            color: #fff;
+        }
+    }
+}
+
+.td-task-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.td-task-title {
+    font-size: @text-base;
+    font-weight: 600;
+    color: @ink;
+    line-height: 1.35;
+}
+
+.td-task-meta {
+    display: flex;
+    align-items: center;
+    gap: @space-2;
+    flex-wrap: wrap;
+}
+
+.td-task-assignee {
+    font-size: @text-xs;
+    color: @muted;
+    font-weight: 600;
+}
+
+.td-task-due {
+    font-family: @mono;
+    font-size: @text-xs;
+    color: @muted;
+
+    &.is-overdue {
+        color: @red;
+        font-weight: 700;
+    }
+}
+
+.td-task-priority {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: @radius-pill;
+
+    &.priority-high {
+        background: @red-bg;
+        color: @red;
+    }
+
+    &.priority-medium {
+        background: @amber-bg;
+        color: @amber;
+    }
+
+    &.priority-low {
+        background: @green-bg;
+        color: @green;
+    }
+}
+
+.td-task-actions {
+    display: flex;
+    align-items: center;
+    gap: @space-1;
+    flex-shrink: 0;
+
+    button {
+        width: 28px;
+        height: 28px;
+        border-radius: @radius-sm;
+        display: grid;
+        place-items: center;
+        background: none;
+        border: none;
+        color: @muted;
+        cursor: pointer;
+        transition: background @transition, color @transition;
+
+        &:hover {
+            background: @line-2;
+            color: @ink;
+        }
+
+        &.is-delete:hover {
+            color: @red;
+        }
+    }
+}
+
+// -------------------------  Add Task  ------------------------- //
+
+.td-add-task {
+    flex-shrink: 0;
+    padding-top: @space-2;
+    border-top: 1px solid @line-2;
+}
+
+// -------------------------  Details Tab  ------------------------- //
+
+.td-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: @space-3;
+    background: @panel;
+    border: 1px solid @line-2;
+    border-radius: @radius;
+    padding: 14px;
+    box-shadow: @shadow;
+}
+
+.td-grp-head {
+    font-size: @text-sm;
+    font-weight: 700;
+    color: @muted;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding-bottom: @space-2;
+    border-bottom: 1px solid @line-2;
+}
+
+.td-dl {
+    display: flex;
+    flex-direction: column;
+    gap: @space-2;
+}
+
+.td-field {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: center;
+    gap: @space-3;
+    min-height: 32px;
+
+    dt {
+        font-size: @text-sm;
+        font-weight: 600;
+        color: @muted;
+        white-space: nowrap;
+    }
+
+    dd {
+        min-width: 0;
+    }
+}
+
+// -------------------------  Field Values  ------------------------- //
+
+.Field-Value {
+    font-size: @text-base;
+    color: @ink;
+    font-weight: 500;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.td-input {
+    width: 100%;
+    font-family: @ui;
+    font-size: @text-base;
+    color: @ink;
+    background: @panel-2;
+    border: 1px solid @line;
+    border-radius: @radius-sm;
+    padding: 6px 10px;
+    transition: border-color @transition, box-shadow @transition;
+    outline: none;
+
+    &:focus {
+        border-color: @accent;
+        box-shadow: 0 0 0 3px @accent-soft;
+    }
+
+    &:disabled {
+        opacity: .5;
+        cursor: not-allowed;
+    }
+}
+
+.td-select {
+    .td-input();
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236A655C' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+    cursor: pointer;
+}
+
+// -------------------------  Activity Tab  ------------------------- //
+
+.td-act-filters {
+    display: flex;
+    align-items: center;
+    gap: @space-1;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+    padding-bottom: @space-2;
+    border-bottom: 1px solid @line-2;
+}
+
+.td-chip {
+    display: inline-flex;
+    align-items: center;
+    font-family: @ui;
+    font-size: @text-sm;
+    font-weight: 600;
+    color: @muted;
+    background: none;
+    border: 1px solid @line;
+    border-radius: @radius-pill;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: background @transition, color @transition, border-color @transition;
+
+    &:hover {
+        background: @line-2;
+        color: @ink;
+    }
+
+    &[aria-pressed="true"] {
+        background: @accent-soft;
+        color: @accent-ink;
+        border-color: @accent;
+    }
+}
+
+// -------------------------  Timeline  ------------------------- //
+
+.td-timeline {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+    padding-left: 28px;
+    // Vertical line
+    &::before {
+        content: '';
+        position: absolute;
+        left: 10px;
+        top: 8px;
+        bottom: 8px;
+        width: 1px;
+        background: @line-2;
+    }
+}
+
+.td-timeline-item {
+    position: relative;
+    padding: 0 0 @space-4 @space-4;
+    animation: rise @transition-md both;
+    // Dot
+    &::before {
+        content: '';
+        position: absolute;
+        left: -22px;
+        top: 5px;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: @line;
+        border: 2px solid @panel;
+        box-shadow: 0 0 0 1px @line;
+    }
+
+    &.type-status::before {
+        background: @blue;
+        box-shadow: 0 0 0 1px @blue;
+    }
+
+    &.type-assign::before {
+        background: @accent;
+        box-shadow: 0 0 0 1px @accent;
+    }
+
+    &.type-note::before {
+        background: @amber;
+        box-shadow: 0 0 0 1px @amber;
+    }
+
+    &.type-task::before {
+        background: @green;
+        box-shadow: 0 0 0 1px @green;
+    }
+
+    &:last-child {
+        padding-bottom: 0;
+    }
+}
+
+.td-tl-head {
+    display: flex;
+    align-items: center;
+    gap: @space-2;
+    margin-bottom: 3px;
+}
+
+.td-tl-actor {
+    font-size: @text-sm;
+    font-weight: 700;
+    color: @ink;
+}
+
+.td-tl-action {
+    font-size: @text-sm;
+    color: @muted;
+}
+
+.td-tl-time {
+    font-family: @mono;
+    font-size: @text-xs;
+    color: @muted;
+    margin-left: auto;
+}
+
+.td-tl-body {
+    font-size: @text-sm;
+    color: @ink-2;
+    line-height: 1.5;
+    background: @panel;
+    border: 1px solid @line-2;
+    border-radius: @radius-sm;
+    padding: 8px 10px;
+    margin-top: @space-1;
+}
+
+.td-tl-change {
+    display: flex;
+    align-items: center;
+    gap: @space-2;
+    font-size: @text-sm;
+    color: @muted;
+    margin-top: 3px;
+
+    .td-tl-from {
+        text-decoration: line-through;
+        color: @red;
+    }
+
+    .td-tl-to {
+        font-weight: 700;
+        color: @green;
+    }
+
+    svg {
+        flex-shrink: 0;
+        color: @muted;
+    }
+}
+
+// -------------------------  Overlay  ------------------------- //
+
+.td-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(20,18,15,.45);
+    display: grid;
+    place-items: center;
+    padding: @space-4;
+    backdrop-filter: blur(3px);
+    animation: rise @transition-md both;
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+.td-overlay-inner {
+    background: @panel;
+    border-radius: @radius-lg;
+    box-shadow: @shadow-lg;
+    width: 100%;
+    max-width: 520px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: rise @transition-md both;
+}
+
+.td-overlay-head {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid @line-2;
+    flex-shrink: 0;
+
+    h2 {
+        font-size: @text-lg;
+        font-weight: 700;
+        letter-spacing: -.01em;
+        flex: 1;
+    }
+}
+
+.td-overlay-close {
+    width: 32px;
+    height: 32px;
+    border-radius: @radius-sm;
+    display: grid;
+    place-items: center;
+    background: none;
+    border: none;
+    color: @muted;
+    cursor: pointer;
+    transition: background @transition, color @transition;
+
+    &:hover {
+        background: @line-2;
+        color: @ink;
+    }
+}
+
+.td-overlay-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: @space-4;
+    scrollbar-width: thin;
+    scrollbar-color: @line transparent;
+
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: @line;
+        border-radius: 99px;
+    }
+}
+
+.td-overlay-foot {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: @space-2;
+    padding: 14px 20px;
+    border-top: 1px solid @line-2;
+    flex-shrink: 0;
+}
+
+// ---- Activity feed ---- //
+
+.td-activity-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: @space-3 0;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.td-activity-day {
+    display: flex;
+    align-items: center;
+    gap: @space-3;
+    padding: @space-2 @space-4;
+    font-size: @text-xs;
+    font-weight: 700;
+    color: @muted;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+
+    &::before,
+    &::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: @line;
+    }
+}
+
+.td-activity-item {
+    display: flex;
+    align-items: flex-start;
+    gap: @space-3;
+    padding: @space-2 @space-4;
+    transition: background @transition;
+
+    &:hover {
+        background: @panel-2;
+    }
+}
+
+.td-activity-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    background: @panel-2;
+    color: @muted;
+    // Per-type colours
+    &.type-1 {
+        background: @blue-soft;
+        color: @blue;
+    }
+    // status
+    &.type-2 {
+        background: @amber-soft;
+        color: @amber;
+    }
+    // priority
+    &.type-3 {
+        background: @purple-soft;
+        color: @purple;
+    }
+    // assignee
+    &.type-4 {
+        background: @panel-2;
+        color: @ink-2;
+    }
+    // note
+    &.type-5 {
+        background: @accent-soft;
+        color: @accent;
+    }
+    // message
+    &.type-6 {
+        background: @green-soft;
+        color: @green;
+    }
+    // task added
+    &.type-7 {
+        background: @green-soft;
+        color: @green;
+    }
+    // task complete
+    &.type-8 {
+        background: @red-soft;
+        color: @red;
+    }
+    // task deleted
+    &.type-9 {
+        background: @panel-2;
+        color: @ink-2;
+    }
+    // attachment
+    &.type-10 {
+        background: @accent-soft;
+        color: @accent;
+    }
+    // created
+    &.type-11 {
+        background: @green-soft;
+        color: @green;
+    }
+    // closed
+    &.type-12 {
+        background: @panel-2;
+        color: @ink-2;
+    }
+    // category
+    &.type-13 {
+        background: @amber-soft;
+        color: @amber;
+    }
+    // due date
+}
+
+.td-activity-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.td-activity-desc {
+    font-size: @text-sm;
+    color: @ink;
+    line-height: 1.4;
+    margin: 0;
+
+    strong {
+        font-weight: 700;
+        color: @ink;
+    }
+}
+
+.td-activity-meta {
+    display: flex;
+    align-items: center;
+    gap: @space-2;
+}
+
+.td-activity-actor {
+    font-size: @text-xs;
+    font-weight: 600;
+    color: @ink-2;
+}
+
+.td-activity-time {
+    font-size: @text-xs;
+    color: @muted;
+    font-family: @mono;
+
+    &::before {
+        content: '·';
+        margin-right: @space-2;
+    }
+}
+
+// ---- Filter bar ---- //
+
+.td-activity-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: @space-1;
+    padding: @space-2 @space-4;
+    border-bottom: 1px solid @line;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.td-activity-filter-btn {
+    padding: 4px 12px;
+    border-radius: @radius-pill;
+    border: 1px solid @line;
+    background: none;
+    font-family: @ui;
+    font-size: @text-xs;
+    font-weight: 600;
+    color: @ink-2;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background @transition, color @transition, border-color @transition;
+    flex-shrink: 0;
+
+    &:hover {
+        background: @panel-2;
+        color: @ink;
+    }
+
+    &.is-active {
+        background: @accent;
+        border-color: @accent;
+        color: #fff;
+    }
+}
+
+// ---- Load more ---- //
+
+.td-activity-load-more-wrap {
+    display: flex;
+    justify-content: center;
+    padding: @space-3 @space-4;
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+.td-activity-load-more {
+    padding: 6px 20px;
+    border-radius: @radius-pill;
+    border: 1px solid @line;
+    background: none;
+    font-family: @ui;
+    font-size: @text-sm;
+    font-weight: 600;
+    color: @ink-2;
+    cursor: pointer;
+    transition: background @transition, color @transition;
+
+    &:hover {
+        background: @panel-2;
+        color: @ink;
+    }
+
+    &:disabled {
+        opacity: .5;
+        cursor: not-allowed;
+    }
+}
+
+// ---- Skeleton ---- //
+
+.td-activity-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: @space-3;
+    padding: @space-4;
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+.td-activity-skeleton-row {
+    display: flex;
+    align-items: center;
+    gap: @space-3;
+
+    .skel-circle {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: @line;
+        flex-shrink: 0;
+        animation: shimmer 1.4s infinite;
+    }
+
+    .skel-lines {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+
+        span {
+            height: 10px;
+            border-radius: @radius-sm;
+            background: @line;
+            animation: shimmer 1.4s infinite;
+
+            &:first-child {
+                width: 60%;
+            }
+
+            &:last-child {
+                width: 30%;
+            }
+        }
+    }
+}
+
+// -------------------------  Overlay Form Fields  ------------------------- //
+
+.td-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: @space-1;
+
+    label {
+        font-size: @text-sm;
+        font-weight: 700;
+        color: @ink-2;
+    }
+}
+
+.td-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: @space-3;
+}
+
+// -------------------------  Responsive  ------------------------- //
+
+@media (max-width: 860px) {
+    .td-shell {
+        &[data-layout="both"] {
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr 1fr;
+        }
+
+        .td-pane--left {
+            border-right: none;
+            border-bottom: 1px solid @line;
+        }
+
+        .td-pane--right {
+            border-top: none;
+        }
+    }
+
+    .td-id-block .td-title {
+        max-width: 50vw;
+    }
+
+    .td-topbar-meta {
+        display: none;
+    }
+
+    .td-form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    .td-topbar {
+        padding: 0 12px;
+        gap: 8px;
+    }
+
+    .td-field {
+        grid-template-columns: 1fr;
+        gap: @space-1;
+
+        dt {
+            font-size: @text-xs;
+        }
+    }
+}

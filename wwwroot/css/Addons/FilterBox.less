@@ -1,0 +1,511 @@
+/* Variables */
+@FontSize-base: 13px;
+@FontSize-small: 12px;
+@Font-MainText: Calibri, Arial, sans-serif;
+
+@Colour-Primary: #007bff;
+@Colour-Primary-Hover: #0056b3;
+@Colour-Secondary: #6c757d;
+@Colour-Border: #dee2e6;
+@Colour-White: #ffffff;
+@Colour-Background: #f8f9fa;
+@Colour-Success: #28a745;
+
+/* ============= Polished Collapsible Filter ============= */
+
+#Filter-Box {
+    position: relative;
+    width: 100%;
+    background: @Colour-White;
+    border: 1px solid @Colour-Border;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+    overflow: hidden; /* ✅ Prevents content from breaking out during animation */
+    transition: box-shadow 0.3s ease;
+
+    &:hover {
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    }
+    /* ✅ Hide original header when using collapsible mode */
+    &.collapsed,
+    &.expanded {
+        .filter-header {
+            display: none;
+        }
+    }
+    /* ✅ Collapsed state - compact */
+    &.collapsed {
+        .filter-body {
+            display: none;
+            opacity: 0;
+        }
+    }
+    /* ✅ Expanded state - smooth reveal */
+    &.expanded {
+        .filter-body {
+            display: flex;
+            opacity: 1;
+            animation: slideDown 0.3s ease-out;
+        }
+    }
+}
+
+/* ✅ Smooth slide-down animation */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        max-height: 500px;
+        transform: translateY(0);
+    }
+}
+
+/* ============= Compact Header (Always Visible) ============= */
+
+.filter-compact-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: linear-gradient(to bottom, #fafbfc 0%, #f6f8fa 100%);
+    border-bottom: 1px solid @Colour-Border;
+    min-height: 52px;
+
+    .filter-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        background: @Colour-White;
+        border: 1px solid @Colour-Border;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: @FontSize-base;
+        font-family: @Font-MainText;
+        font-weight: 600;
+        color: #24292e;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+        &:hover {
+            background: @Colour-Primary;
+            color: white;
+            border-color: @Colour-Primary;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        &:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-icon {
+            font-size: 15px;
+        }
+
+        .toggle-text {
+            font-size: @FontSize-base;
+        }
+
+        .toggle-chevron {
+            font-size: 11px;
+            margin-left: 2px;
+            transition: transform 0.3s ease;
+        }
+    }
+    /* ✅ Rotate chevron when expanded */
+    #Filter-Box.expanded & .filter-toggle .toggle-chevron {
+        transform: rotate(180deg);
+    }
+
+    .filter-chips-preview {
+        display: flex;
+        gap: 8px;
+        flex: 1;
+        overflow-x: auto;
+        padding: 2px 0;
+        /* ✅ Custom scrollbar */
+        &::-webkit-scrollbar {
+            height: 5px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: @Colour-Border;
+            border-radius: 3px;
+
+            &:hover {
+                background: darken(@Colour-Border, 15%);
+            }
+        }
+        /* ✅ Empty state message */
+        &:empty::after {
+            content: 'No active filters';
+            color: #8b949e;
+            font-size: @FontSize-small;
+            font-style: italic;
+            padding: 4px 0;
+        }
+    }
+
+    .filter-chip {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 10px;
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border: 1px solid #90caf9;
+        border-radius: 14px;
+        font-size: 12px;
+        font-family: @Font-MainText;
+        white-space: nowrap;
+        animation: chipSlideIn 0.25s ease-out;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        transition: all 0.2s ease;
+
+        &:hover {
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .chip-label {
+            font-weight: 700;
+            color: #1565c0;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.3px;
+        }
+
+        .chip-value {
+            color: #0d47a1;
+            font-weight: 500;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chip-remove {
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            color: #1565c0;
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+
+            &:hover {
+                background: #ef5350;
+                color: white;
+                transform: rotate(90deg);
+            }
+        }
+    }
+
+    .filter-clear-all {
+        padding: 8px 14px;
+        background: @Colour-White;
+        border: 1px solid @Colour-Border;
+        border-radius: 5px;
+        color: @Colour-Secondary;
+        font-size: 12px;
+        font-family: @Font-MainText;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+        &:hover {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+            box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+            transform: translateY(-1px);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+}
+
+@keyframes chipSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-15px) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+/* ============= Filter Body (Expandable Section) ============= */
+
+/* ============= Filter Body (Expandable Section) ============= */
+
+.filter-body {
+    display: flex;
+    align-items: center; /* ✅ Changed from flex-direction: column */
+    gap: 8px; /* ✅ Reduced gap for horizontal layout */
+    padding: 16px;
+    background: @Colour-White;
+    flex-wrap: wrap; /* ✅ Allow wrapping if too many filters */
+
+    #Filter-Fields-Container {
+        display: contents; /* ✅ Makes children appear inline */
+    }
+
+    .filter-row-group {
+        display: contents; /* ✅ No wrapper, items flow inline */
+    }
+
+    .filter-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
+        flex: 0 0 auto; /* ✅ Don't grow, don't shrink */
+
+        label {
+            font-weight: 600;
+            font-size: 11px;
+            font-family: @Font-MainText;
+            color: #24292e;
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+
+        input,
+        select {
+            padding: 7px 10px;
+            border: 1px solid @Colour-Border;
+            border-radius: 5px;
+            font-size: @FontSize-base;
+            font-family: @Font-MainText;
+            background: @Colour-White;
+            transition: all 0.2s ease;
+            min-width: 140px;
+
+            &:focus {
+                outline: none;
+                border-color: @Colour-Primary;
+                box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+            }
+
+            &:hover:not(:focus) {
+                border-color: darken(@Colour-Border, 15%);
+            }
+        }
+
+            input[type="text"] {
+                min-width: 160px;
+
+                &::placeholder {
+                    color: #8b949e;
+                    font-size: 12px;
+                }
+            }
+
+            input[type="date"] {
+                min-width: 140px;
+            }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 32px;
+        }
+    }
+        /* ✅ Optional: Add visual separator between filter groups */
+        .filter-row + .filter-row {
+            position: relative;
+
+            &::before {
+                content: '';
+                position: absolute;
+                left: -4px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 1px;
+                height: 20px;
+                background: @Colour-Border;
+            }
+        }
+
+    .filter-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-left: auto; /* ✅ Push to the right */
+
+        button {
+            padding: 7px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: @FontSize-base;
+            font-weight: 600;
+            font-family: @Font-MainText;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+            &:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            }
+
+            &:active:not(:disabled) {
+                transform: translateY(0);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            &:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                transform: none !important;
+            }
+
+            span {
+                margin-right: 4px;
+            }
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, @Colour-Primary 0%, @Colour-Primary-Hover 100%);
+            color: white;
+
+            &:hover:not(:disabled) {
+                background: linear-gradient(135deg, @Colour-Primary-Hover 0%, darken(@Colour-Primary-Hover, 10%) 100%);
+            }
+        }
+
+        .btn-secondary {
+            background: @Colour-White;
+            color: @Colour-Secondary;
+            border: 1px solid @Colour-Border;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+            &:hover:not(:disabled) {
+                background: @Colour-Background;
+                border-color: darken(@Colour-Border, 10%);
+            }
+        }
+    }
+
+    .filter-results {
+        padding: 6px 12px;
+        font-weight: 600;
+        font-size: 11px;
+        color: @Colour-Success;
+        background: lighten(@Colour-Success, 52%);
+        border: 1px solid lighten(@Colour-Success, 40%);
+        border-radius: 5px;
+        white-space: nowrap;
+
+        &:empty {
+            display: none;
+        }
+    }
+}
+
+
+/* ============= Responsive Design ============= */
+
+@media screen and (max-width: 1200px) {
+    .filter-compact-header {
+        flex-wrap: wrap;
+
+        .filter-chips-preview {
+            flex-basis: 100%;
+            order: 3;
+            margin-top: 8px;
+        }
+    }
+
+    .filter-body {
+        .filter-row {
+            input, select {
+                min-width: 140px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #Filter-Box {
+        border-radius: 4px;
+    }
+
+    .filter-compact-header {
+        padding: 10px 12px;
+        flex-direction: column;
+        align-items: stretch;
+
+        .filter-toggle {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .filter-chips-preview {
+            margin-top: 8px;
+        }
+
+        .filter-clear-all {
+            width: 100%;
+            margin-top: 8px;
+        }
+    }
+
+    .filter-body {
+        padding: 16px 12px;
+
+        .filter-row {
+            flex-direction: column;
+            align-items: stretch;
+            width: 100%;
+
+            label {
+                font-size: 11px;
+            }
+
+            input, select {
+                width: 100%;
+                min-width: 100%;
+            }
+        }
+
+        .filter-actions {
+            width: 100%;
+            margin-left: 0;
+            flex-direction: column;
+
+            button {
+                width: 100%;
+            }
+        }
+    }
+}

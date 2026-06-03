@@ -1,0 +1,168 @@
+﻿/**
+ * Cookie.css
+ * Modern cookie consent banner styling
+ * Version: 2.0
+ */
+
+/* ============= Cookie Bar Base ============= */
+#cookie-bar {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    color: #eeeeee;
+    font-family: Calibri, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: center;
+    padding: 16px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+    /* ============= Fixed Positioning ============= */
+    #cookie-bar.fixed {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        transform: translateY(0);
+    }
+
+        #cookie-bar.fixed.bottom {
+            top: auto;
+            bottom: 0;
+        }
+
+    /* ============= Content Styling ============= */
+    #cookie-bar p {
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        max-width: 800px;
+        margin-right: 12px;
+    }
+
+    /* ============= Button Base Styling ============= */
+    #cookie-bar a {
+        color: #ffffff;
+        display: inline-block;
+        border-radius: 4px;
+        text-decoration: none;
+        padding: 8px 16px;
+        margin: 4px 6px;
+        font-weight: 600;
+        font-size: 13px;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+        cursor: pointer;
+        vertical-align: middle;
+    }
+
+        #cookie-bar a:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        #cookie-bar a:active {
+            transform: translateY(0);
+        }
+
+    /* ============= Accept Button ============= */
+    #cookie-bar .cb-enable {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        border-color: #28a745;
+    }
+
+        #cookie-bar .cb-enable:hover {
+            background: linear-gradient(135deg, #218838 0%, #1ea87a 100%);
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.4);
+        }
+
+    /* ============= Decline Button ============= */
+    #cookie-bar .cb-disable {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border-color: #dc3545;
+    }
+
+        #cookie-bar .cb-disable:hover {
+            background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
+        }
+
+    /* ============= Policy Button ============= */
+    #cookie-bar .cb-policy {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        border-color: #007bff;
+    }
+
+        #cookie-bar .cb-policy:hover {
+            background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.4);
+        }
+
+/* ============= Responsive Design ============= */
+@media screen and (max-width: 768px) {
+    #cookie-bar {
+        padding: 12px 16px;
+        font-size: 13px;
+    }
+
+        #cookie-bar p {
+            display: block;
+            margin-bottom: 12px;
+            margin-right: 0;
+        }
+
+        #cookie-bar a {
+            display: inline-block;
+            margin: 4px 4px;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+}
+
+@media screen and (max-width: 480px) {
+    #cookie-bar {
+        padding: 10px 12px;
+    }
+
+        #cookie-bar a {
+            display: block;
+            width: calc(100% - 24px);
+            margin: 6px auto;
+        }
+}
+
+/* ============= Animation States ============= */
+#cookie-bar.slide-out {
+    transform: translateY(-100%);
+    opacity: 0;
+}
+
+#cookie-bar.fixed.bottom.slide-out {
+    transform: translateY(100%);
+}
+
+#cookie-bar.fade-out {
+    opacity: 0;
+}
+
+/* ============= Accessibility ============= */
+#cookie-bar a:focus {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+}
+
+/* ============= Dark Mode Support ============= */
+@media (prefers-color-scheme: dark) {
+    #cookie-bar {
+        background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* ============= Print Styles ============= */
+@media print {
+    #cookie-bar {
+        display: none !important;
+    }
+}
