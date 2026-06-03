@@ -31,13 +31,13 @@ const NavBar = {
     allTasks() {
         sessionStorage.setItem(STORAGE_KEYS.MY_TICKETS, '0');
         sessionStorage.setItem(STORAGE_KEYS.TICKET_OR_TASK, 'Task');
-        Nav.toTicketPage();
+        Nav.toTasksPage();
     },
 
     myTasks() {
         sessionStorage.setItem(STORAGE_KEYS.MY_TICKETS, '1');
         sessionStorage.setItem(STORAGE_KEYS.TICKET_OR_TASK, 'Task');
-        Nav.toTicketPage();
+        Nav.toTasksPage();
     },
 
     // -------------------------  Display  ------------------------- //
