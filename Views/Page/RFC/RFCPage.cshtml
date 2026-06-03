@@ -1,16 +1,13 @@
-﻿@using HelpDeskNet8.Models.ViewModels
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
-    var model = new ListPageViewModel
-    {
-        PageCss = "/css/Pages/RFC.less",
-        FilterBox = FilterBoxViewModel.ForRFCs()
-    };
+@section AddCSSToHead {
+    <link rel="stylesheet" type="text/css" href="~/css/Addons/Queue.css" asp-append-version="true" />
 }
 
 @section AddJSToBody {
     <script src="~/js/Pages/RFC/RFCPage.js" asp-append-version="true"></script>
 }
 
-@await Html.PartialAsync("_ListPage", model)
+<div id="queue-mount" class="qv--page"></div>
