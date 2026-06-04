@@ -129,10 +129,11 @@ class TicketPage extends PageBase {
             bulk: [
                 {
                     id: 'status', label: 'Set status',
-                    options: ['Open', 'Pending', 'On Hold', 'Closed', 'Solved'],
+                    options: ['Open', 'In Progress', 'Pending', 'Resolved', 'Closed'],
                     apply: async (value, rows) => {
+                        const code = { Open: 1, 'In Progress': 2, Pending: 3, Resolved: 4, Closed: 5 }[value];
                         await API.post('Ticket/BulkUpdate', API.authPayload({
-                            ids: rows.map(r => r.ticketID), field: 'status', value
+                            ids: rows.map(r => r.ticketID), field: 'status', value: code
                         }));
                     }
                 },
