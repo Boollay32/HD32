@@ -30,6 +30,42 @@ namespace HelpDeskNet8.Services
             _connection = connection;
         }
 
+        public SaveResult BulkUpdate(IUser user, IEnumerable<int> ids, string field, int value, int UTC)
+        {
+            var idList = (ids ?? Enumerable.Empty<int>()).Where(id => id > 0).Distinct().ToList();
+            if (idList.Count == 0)
+                return SaveResult.Failed("No records selected.");
+            if (field != "status" && field != "assignedTech")
+                return SaveResult.Failed("Field not permitted.");
+
+            using IDbCommand command = _connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[dbo].[usp_Helpdesk_BulkUpdateTicket]";
+            command.CommandTimeout = 60;
+
+            command.Parameters.Add(new SqlParameter("@UserID",    SqlDbType.Int)      { Value = user.UserID.HasValue ? (object)user.UserID.Value : DBNull.Value });
+            command.Parameters.Add(new SqlParameter("@TicketIDs", SqlDbType.NVarChar) { Value = string.Join(",", idList) });
+            command.Parameters.Add(new SqlParameter("@Field",     SqlDbType.NVarChar) { Value = field });
+            command.Parameters.Add(new SqlParameter("@Value",     SqlDbType.Int)      { Value = value });
+            command.Parameters.Add(new SqlParameter("@UTC",       SqlDbType.Int)      { Value = UTC });
+
+            _connection.Open();
+            try
+            {
+                int updated = (int)command.ExecuteScalar();
+                return SaveResult.Updated(updated);
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error(nameof(TicketManager), ex);
+                return SaveResult.Failed(ex.Message);
+            }
+            finally
+            {
+                _connection.Close();
+            }
+        }
+
         public IEnumerable<ITicketStub> GetTickets(IUser user, IFilter filter, Int32 mytickets, int UTC)
         {
             if (filter == null)
