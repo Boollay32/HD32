@@ -5,16 +5,16 @@
 
 // -------------------------  Presentation helpers  ------------------------- //
 
-const TQ_PRIORITY_COLOR = { Urgent: '#C0392B', High: '#A25A06', Normal: '#5F5A52', Low: '#8E897F' };
+const TQ_PRIORITY_COLOR = { Urgent: 'var(--pri-urgent)', High: 'var(--pri-high)', Normal: 'var(--pri-normal)', Low: 'var(--pri-low)' };
 const TQ_PRIORITY_ORDER = { Urgent: 0, High: 1, Normal: 2, Low: 3 };
 const TQ_STATUS_COLOR = {
-    Open:      ['#1E51C0', '#E8EFFD'],
-    Pending:   ['#A25A06', '#FAEFDB'],
-    'On Hold': ['#5F5A52', '#E6E3DC'],
-    Closed:    ['#1F7A43', '#E4F2E8'],
-    Solved:    ['#1F7A43', '#E4F2E8'],
+    Open:      ['var(--info-fg)', 'var(--info-bg)'],
+    Pending:   ['var(--warn-fg)', 'var(--warn-bg)'],
+    'On Hold': ['var(--neutral-fg)', 'var(--neutral-bg)'],
+    Closed:    ['var(--ok-fg)', 'var(--ok-bg)'],
+    Solved:    ['var(--ok-fg)', 'var(--ok-bg)'],
 };
-const TQ_AV_PALETTE = ['#15695A', '#1E51C0', '#A25A06', '#6D28C9', '#B23121', '#0E6E80'];
+const TQ_AV_PALETTE = ['#5A6470', '#1E51C0', '#A25A06', '#6D28C9', '#B23121', '#0E6E80'];
 
 const TQesc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const TQinitials = n => (n || '?').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
@@ -103,12 +103,12 @@ class TicketPage extends PageBase {
                 {
                     key: 'priority', label: 'Priority', sortable: true,
                     sortValue: r => TQ_PRIORITY_ORDER[r.priority] ?? 9,
-                    render: r => `<span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || '#999'}"></span>${TQesc(r.priority)}</span>`
+                    render: r => `<span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${TQesc(r.priority)}</span>`
                 },
                 {
                     key: 'status', label: 'Status',
                     render: r => {
-                        const c = TQ_STATUS_COLOR[r.status] || ['#5F5A52', '#E6E3DC'];
+                        const c = TQ_STATUS_COLOR[r.status] || ['var(--neutral-fg)', 'var(--neutral-bg)'];
                         return `<span class="qv-status" style="color:${c[0]};background:${c[1]}">${TQesc(r.status)}</span>`;
                     }
                 },
@@ -126,10 +126,21 @@ class TicketPage extends PageBase {
             ],
 
             defaultSort: { key: 'updated', dir: -1 },
+            bulk: [
+                {
+                    id: 'status', label: 'Set status',
+                    options: ['Open', 'Pending', 'On Hold', 'Closed', 'Solved'],
+                    apply: async (value, rows) => {
+                        await API.post('Ticket/BulkUpdate', API.authPayload({
+                            ids: rows.map(r => r.ticketID), field: 'status', value
+                        }));
+                    }
+                },
+            ],
 
             previewHeader: r => `<div class="qv-pv-tid">#${r.ticketID}</div><div class="qv-pv-title">${TQesc(r.subject)}</div>
                 <div class="qv-pv-meta"><span class="qv-badge">${TQesc(r.requestType)}</span>
-                <span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || '#999'}"></span>${TQesc(r.priority)}</span></div>`,
+                <span class="qv-prio"><span class="qv-led" style="background:${TQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${TQesc(r.priority)}</span></div>`,
             preview: r => `<h3 class="qv-pv-h">Requester</h3>
                 <div class="qv-assignee" style="margin-bottom:14px"><span class="qv-av" style="background:${TQavColor(r.userName)};width:28px;height:28px;font-size:10px">${TQinitials(r.userName)}</span><div><div style="font-weight:600;font-size:13px">${TQesc(r.userName)}</div><div style="font-size:11.5px;color:var(--muted, #6A655C)">${TQesc(r.authority)} · updated ${TQago(r.updated)}</div></div></div>
                 <h3 class="qv-pv-h">At a glance</h3>

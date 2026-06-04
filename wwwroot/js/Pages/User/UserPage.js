@@ -7,7 +7,7 @@
 // -------------------------  Presentation helpers  ------------------------- //
 
 const UQ_ROLE_LABELS = { '0': 'Authority', '1': 'Govtech', '2': 'Admin', '4': 'RFC only' };
-const UQ_AV_PALETTE = ['#15695A', '#1E51C0', '#A25A06', '#6D28C9', '#B23121', '#0E6E80'];
+const UQ_AV_PALETTE = ['#5A6470', '#1E51C0', '#A25A06', '#6D28C9', '#B23121', '#0E6E80'];
 
 const UQesc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const UQinitials = n => (n || '?').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
@@ -16,9 +16,9 @@ const UQrole = v => UQ_ROLE_LABELS[String(v ?? '').trim()] ?? (v || '—');
 // locked: 0/empty = active, 99 = deactivated, anything else = locked
 const UQstatus = r => {
     const l = r.locked;
-    if (l === 99) return { label: 'Deactivated', color: '#5F5A52', bg: '#E6E3DC' };
-    if (l) return { label: 'Locked', color: '#B23121', bg: '#FAE7E4' };
-    return { label: 'Active', color: '#1F7A43', bg: '#E4F2E8' };
+    if (l === 99) return { label: 'Deactivated', color: 'var(--neutral-fg)', bg: 'var(--neutral-bg)' };
+    if (l) return { label: 'Locked', color: 'var(--bad-fg)', bg: 'var(--bad-bg)' };
+    return { label: 'Active', color: 'var(--ok-fg)', bg: 'var(--ok-bg)' };
 };
 const UQdate = iso => {
     if (!iso) return 'Never';

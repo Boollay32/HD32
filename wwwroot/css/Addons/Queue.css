@@ -488,3 +488,102 @@
   flex-wrap: wrap;
   gap: 8px;
 }
+
+/* HD32-THEME-LAYER v1 */
+/* =============================================================================
+   Theme layer: white / grey / orange / black, light + dark.
+   Every queue surface colour routes through a variable; [data-theme] flips them.
+   ============================================================================= */
+:root, html[data-theme="light"]{
+  --bg:#F3F3F1; --panel:#FFFFFF; --text:#1A1A19; --muted:#6B6B66;
+  --border:#E4E3DF; --row-border:#EDECE8; --row-hover:#FAFAF8;
+  --header-bg:#ECEBE7; --scrim:rgba(26,26,25,.28);
+  --accent:#E8722A; --accent-strong:#C85F1E; --accent-soft:#FBE7D6; --on-accent:#FFFFFF;
+  --badge-fg:#5A554D; --badge-bg:#F0EEE9;
+  --info-fg:#1E51C0; --info-bg:#E8EFFD;
+  --warn-fg:#9A4D0C; --warn-bg:#FBE7D2;
+  --ok-fg:#1F7A43;   --ok-bg:#E4F2E8;
+  --bad-fg:#B23121;  --bad-bg:#FAE7E4;
+  --neutral-fg:#5F5A52; --neutral-bg:#E9E7E2;
+  --pri-urgent:#C0392B; --pri-high:#C85F1E; --pri-normal:#6B6B66; --pri-low:#9A958C;
+}
+html[data-theme="dark"]{
+  /* inspired by GitHub "Dim": softer than pure black, layered surfaces
+     (page dark, cards lifted lighter so rows stand out), high-contrast text */
+  --bg:#1C2128; --panel:#2D333B; --text:#DBE2EA; --muted:#909DAB;
+  --border:#444C56; --row-border:#373E47; --row-hover:#323941;
+  --header-bg:#22272E; --scrim:rgba(1,4,9,.6);
+  --accent:#F0843A; --accent-strong:#FF9A55; --accent-soft:#3A2C1C; --on-accent:#1C2128;
+  --badge-fg:#ADBAC7; --badge-bg:#373E47;
+  --info-fg:#6CB6FF; --info-bg:#143049;
+  --warn-fg:#F0A868; --warn-bg:#3A2A14;
+  --ok-fg:#6BC46D;   --ok-bg:#14331E;
+  --bad-fg:#FF938A;  --bad-bg:#3D211E;
+  --neutral-fg:#ADBAC7; --neutral-bg:#373E47;
+  --pri-urgent:#FF938A; --pri-high:#F0A868; --pri-normal:#ADBAC7; --pri-low:#768390;
+}
+
+/* re-point the queue's surfaces at the variables (later source order wins) */
+.qv{ background:var(--bg); color:var(--text); }
+.qv-table tbody td, .qv-title, .qv-prio, .qv-assignee, .qv-vc{ color:var(--text); }
+.qv-search{ background:var(--panel); border-color:var(--border); }
+.qv-search:focus-within{ border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
+.qv-search svg, .qv-count, .qv-vl, .qv-filt label, .qv-subj .s2,
+.qv-updated, .qv-pv-h, .qv-pv-tid, .qv-pv-close{ color:var(--muted); }
+.qv-search-input, .qv-filt select, .qv-subj .s1{ color:var(--text); }
+.qv-view, .qv-filt{ background:var(--panel); border-color:var(--border); }
+.qv-view:hover{ border-color:var(--accent); }
+.qv-view[aria-pressed="true"]{ background:var(--accent); border-color:var(--accent); }
+.qv-view[aria-pressed="true"] .qv-vc, .qv-view[aria-pressed="true"] .qv-vl{ color:var(--on-accent); }
+.qv-view.warn .qv-vc{ color:var(--bad-fg); }
+.qv-view[aria-pressed="true"].warn .qv-vc{ color:var(--on-accent); }
+.qv-table tbody tr{ background:var(--panel); }
+.qv-table tbody td{ border-top-color:var(--row-border); border-bottom-color:var(--row-border); }
+.qv-table tbody tr:hover td{ background:var(--row-hover); }
+.qv-table tbody tr[aria-selected="true"] td{ background:var(--accent-soft); }
+.qv-table tbody tr:focus-visible{ outline-color:var(--accent); }
+.qv-empty td{ color:var(--muted); background:var(--panel); }
+.qv-badge{ color:var(--badge-fg); background:var(--badge-bg); }
+.qv-unread{ background:var(--info-fg); }
+.qv-unassigned{ color:var(--accent-strong); }
+.qv-overlay{ background:var(--scrim); }
+.qv-preview{ background:var(--panel); color:var(--text); }
+.qv-pv-head, .qv-pv-foot{ border-color:var(--border); }
+.qv-pv-close:hover{ background:var(--row-hover); color:var(--text); }
+.qv-pv-title{ color:var(--text); }
+.qv-pv-open{ background:var(--accent); color:var(--on-accent); }
+.qv-pv-open:hover{ background:var(--accent-strong); }
+.qv-rowcb, .qv-select-all{ accent-color:var(--accent); }
+
+/* bulk bar (enabled on Tickets + Tasks) */
+.qv-bulkbar{ background:var(--accent-soft); border-top-color:var(--border); border-bottom-color:var(--border); }
+.qv-bulk-n{ color:var(--accent-strong); }
+.qv-bulk-act{ background:var(--panel); border-color:var(--border); color:var(--text); }
+.qv-bulk-act select{ color:var(--text); }
+.qv-bulk-clear{ color:var(--accent-strong); }
+.qv-table thead th.qv-sortable button{ color:var(--muted); }
+.qv-table thead th[aria-sort="ascending"] button,
+.qv-table thead th[aria-sort="descending"] button{ color:var(--text); }
+
+/* sticky-header hardening: header band stays put, rows pass cleanly under it */
+.qv-table-wrap{ padding-top:0; }
+.qv-table thead th{
+  position:sticky; top:0; z-index:30;
+  background:var(--header-bg); color:var(--muted);
+  border-bottom-color:var(--border); box-shadow:0 1px 0 var(--border);
+}
+.qv-table thead th:first-child{ border-radius:0; }
+.qv-table tbody tr{ position:relative; z-index:1; }
+.qv-table tbody tr:first-child td{ border-top:none; }
+
+/* light/dark toggle (injected into .qv-topbar by Theme.js) */
+.qv-theme{ display:inline-flex; align-items:center; gap:8px; margin-left:14px;
+  color:var(--muted); font-size:12px; font-weight:600; }
+.qv-theme .qv-sw{ position:relative; width:48px; height:26px; border-radius:20px;
+  border:1px solid var(--border); background:var(--row-hover); cursor:pointer;
+  transition:.18s ease; flex-shrink:0; padding:0; }
+.qv-theme .qv-knob{ position:absolute; top:2px; left:2px; width:20px; height:20px;
+  border-radius:50%; background:var(--accent); display:grid; place-items:center;
+  transition:.18s cubic-bezier(.4,0,.2,1); }
+html[data-theme="dark"] .qv-theme .qv-knob{ transform:translateX(22px); }
+.qv-theme .qv-knob svg{ width:12px; height:12px; color:var(--on-accent); }

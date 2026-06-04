@@ -5,24 +5,24 @@
 
 // -------------------------  Presentation helpers  ------------------------- //
 
-const RQ_PRIORITY_COLOR = { Urgent: '#C0392B', High: '#A25A06', Normal: '#5F5A52', Low: '#8E897F' };
+const RQ_PRIORITY_COLOR = { Urgent: 'var(--pri-urgent)', High: 'var(--pri-high)', Normal: 'var(--pri-normal)', Low: 'var(--pri-low)' };
 const RQ_PRIORITY_ORDER = { Urgent: 0, High: 1, Normal: 2, Low: 3 };
 const RQ_STATUS_COLOR = {
-    Submitted:     ['#1E51C0', '#E8EFFD'],
-    'In Progress': ['#A25A06', '#FAEFDB'],
-    'On Hold':     ['#5F5A52', '#E6E3DC'],
-    Approved:      ['#0E6E80', '#E1EFEA'],
-    Completed:     ['#1F7A43', '#E4F2E8'],
-    Rejected:      ['#B23121', '#FAE7E4'],
+    Submitted:     ['var(--info-fg)', 'var(--info-bg)'],
+    'In Progress': ['var(--warn-fg)', 'var(--warn-bg)'],
+    'On Hold':     ['var(--neutral-fg)', 'var(--neutral-bg)'],
+    Approved:      ['var(--ok-fg)', 'var(--ok-bg)'],
+    Completed:     ['var(--ok-fg)', 'var(--ok-bg)'],
+    Rejected:      ['var(--bad-fg)', 'var(--bad-bg)'],
 };
 const RQ_DONE = ['Completed', 'Rejected', 'Closed', 'Cancelled'];
-const RQ_AV_PALETTE = ['#15695A', '#1E51C0', '#A25A06', '#6D28C9', '#B23121', '#0E6E80'];
+const RQ_AV_PALETTE = ['#5A6470', '#1E51C0', '#A25A06', '#6D28C9', '#B23121', '#0E6E80'];
 
 const RQesc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const RQinitials = n => (n || '?').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
 const RQavColor = n => { let h = 0; for (const c of (n || '')) h = c.charCodeAt(0) + ((h << 5) - h); return RQ_AV_PALETTE[Math.abs(h) % RQ_AV_PALETTE.length]; };
 const RQisOpen = r => !RQ_DONE.includes(r.status);
-const RQstatusColor = s => RQ_STATUS_COLOR[s] || ['#5F5A52', '#E6E3DC'];
+const RQstatusColor = s => RQ_STATUS_COLOR[s] || ['var(--neutral-fg)', 'var(--neutral-bg)'];
 const RQdate = iso => {
     if (!iso) return '—';
     const d = new Date(iso);
@@ -66,7 +66,7 @@ class RFCPage extends PageBase {
     _config() {
         const me = this.username;   // compared to assignedTech for the "My open" view
         return {
-            title: 'Change Requests',
+            title: 'RFC',
             fetch: () => this._fetch(),
             rowKey: r => r.rfcID,
             search: ['title', 'createdBy', 'rfcID'],
@@ -92,7 +92,7 @@ class RFCPage extends PageBase {
                 {
                     key: 'priority', label: 'Priority', sortable: true,
                     sortValue: r => RQ_PRIORITY_ORDER[r.priority] ?? 9,
-                    render: r => `<span class="qv-prio"><span class="qv-led" style="background:${RQ_PRIORITY_COLOR[r.priority] || '#999'}"></span>${RQesc(r.priority)}</span>`
+                    render: r => `<span class="qv-prio"><span class="qv-led" style="background:${RQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${RQesc(r.priority)}</span>`
                 },
                 {
                     key: 'status', label: 'Status',
@@ -114,7 +114,7 @@ class RFCPage extends PageBase {
             defaultSort: { key: 'targetDate', dir: 1 },
 
             previewHeader: r => `<div class="qv-pv-tid">#${r.rfcID}</div><div class="qv-pv-title">${RQesc(r.title)}</div>
-                <div class="qv-pv-meta"><span class="qv-prio"><span class="qv-led" style="background:${RQ_PRIORITY_COLOR[r.priority] || '#999'}"></span>${RQesc(r.priority)}</span></div>`,
+                <div class="qv-pv-meta"><span class="qv-prio"><span class="qv-led" style="background:${RQ_PRIORITY_COLOR[r.priority] || 'var(--pri-normal)'}"></span>${RQesc(r.priority)}</span></div>`,
             preview: r => {
                 const c = RQstatusColor(r.status);
                 return `<h3 class="qv-pv-h">Raised by</h3>
