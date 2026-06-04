@@ -20,6 +20,45 @@ namespace HelpDeskNet8.Services
             _connection = connection;
         }
 
+        public SaveResult BulkUpdate(IUser user, IEnumerable<int> ids, string field, int value, int UTC)
+        {
+            var idList = (ids ?? Enumerable.Empty<int>()).Where(id => id > 0).Distinct().ToList();
+            if (idList.Count == 0)
+                return SaveResult.Failed("No records selected.");
+            if (field != "status" && field != "assignedTech")
+                return SaveResult.Failed("Field not permitted.");
+
+            using IDbCommand command = _connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "[dbo].[usp_Helpdesk_BulkUpdateTask]";
+            command.CommandTimeout = 60;
+
+            AddParameters(command, new Dictionary<string, (SqlDbType Type, object Value)>
+            {
+                { "@UserID",  (SqlDbType.Int,      user.UserID.HasValue ? (object)user.UserID.Value : DBNull.Value) },
+                { "@TaskIDs", (SqlDbType.NVarChar, string.Join(",", idList)) },
+                { "@Field",   (SqlDbType.NVarChar, field) },
+                { "@Value",   (SqlDbType.Int,      value) },
+                { "@UTC",     (SqlDbType.Int,      UTC) },
+            });
+
+            _connection.Open();
+            try
+            {
+                int updated = (int)command.ExecuteScalar();
+                return SaveResult.Updated(updated);
+            }
+            catch (Exception ex)
+            {
+                AppLogger.Error(nameof(TaskManager), ex);
+                return SaveResult.Failed(ex.Message);
+            }
+            finally
+            {
+                _connection.Close();
+            }
+        }
+
         public IEnumerable<ITask> GetTasks(IUser user, IFilter filter, int UTC)
         {
             filter ??= new Filter();

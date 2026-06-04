@@ -28,6 +28,19 @@ namespace HelpDeskNet8.Controllers.Tickets
         // This duplicate had no JS caller and skipped those checks.
 
         [HttpPost]
+        public IActionResult BulkUpdate([FromBody] BulkUpdateRequest request)
+        {
+            IUser user = this.GetAuthenticatedUser();
+            if (user == null) return Unauthorized();
+
+            SaveResult result = _ticketManager.BulkUpdate(
+                user, request.Ids, request.Field, request.Value, request.UTC);
+
+            if (!result.IsSuccess) return BadRequest(result.Error);
+            return Ok(result);
+        }
+
+        [HttpPost]
         public IActionResult GetTickets([FromBody] GetTicketsRequest request)
         {
             IUser user = this.GetAuthenticatedUser();

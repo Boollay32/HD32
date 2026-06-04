@@ -17,6 +17,19 @@ namespace HelpDeskNet8.Controllers.Tasks
         private readonly IAuthenticator _authenticator = auth;
 
         [HttpPost]
+        public IActionResult BulkUpdate([FromBody] BulkUpdateRequest request)
+        {
+            IUser user = this.GetAuthenticatedUser();
+            if (user == null) return Unauthorized();
+
+            SaveResult result = _taskManager.BulkUpdate(
+                user, request.Ids, request.Field, request.Value, request.UTC);
+
+            if (!result.IsSuccess) return BadRequest(result.Error);
+            return Ok(result);
+        }
+
+        [HttpPost]
         public IActionResult GetTasks([FromBody] GetTasksRequest request)
         {
             IUser user = this.GetAuthenticatedUser();
