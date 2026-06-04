@@ -6,25 +6,28 @@ GO
 /**********************************************************************
   usp_Helpdesk_BulkUpdateTicket
   =============================
-  Bulk-set status | assignedTech on many tickets in one call.
+  Bulk-set status | assignedTech on many tickets in one call. Mirrors
+  usp_Helpdesk_UpdateTicket / usp_Helpdesk_GetTickets behaviour:
 
-  *** DRAFT — VERIFY AGAINST usp_Helpdesk_UpdateTicket / GetTickets ***
-  I have the Task procs but not the Ticket ones, so the items below are
-  assumptions carried over from the Task pattern + TicketManager:
-    (A) ticket table is  dbo.tblTicket          (TaskManager used dbo.tblTask)
-    (B) columns are      StatusID, AssignedTechID, TicketID
-    (C) ticket status-description table is tblStatusTicket (StatusDesc)
-    (D) closing/resolving a ticket has NO extra side-effect (e.g. a
-        CloseDate stamp). If usp_Helpdesk_UpdateTicket sets a close date
-        or fires anything on status change, replicate it here.
-  Ticket status ids: 1 Open · 2 In Progress · 3 Pending · 4 Resolved · 5 Closed
-  No authority scoping (consistent with the Task procs — keyed by id).
+    - AUTHORITY SCOPING: like GetTickets, when the caller's
+      AuthorityAccessID = 0 they are restricted to their own
+      AuthorityID. Govtech users (AccessID = 1) may update any ticket.
+      Ids outside the caller's scope are silently dropped.
+    - status -> 3 (Closed) stamps CloseDate (matches UpdateTicket).
+    - always refreshes LastUpdateDate.
+    - writes tblHistory rows, same wording as UpdateTicket, only for
+      tickets that actually changed.
+
+  Real ticket status ids (from the procs): 1 Open, 2 Pending, 3 Closed,
+  4 Cancelled, 6 CR Open, 7 CR Assigned. CONFIRM the full set with
+  SELECT StatusID, StatusDesc FROM tblStatus.
+  Columns are fixed per IF-branch — no dynamic SQL.
 *********************************************************************/
 CREATE OR ALTER PROCEDURE [dbo].[usp_Helpdesk_BulkUpdateTicket]
     @UserID    int,
-    @TicketIDs nvarchar(max),
-    @Field     nvarchar(32),
-    @Value     int,
+    @TicketIDs nvarchar(max),   -- comma-separated ticket ids
+    @Field     nvarchar(32),    -- 'status' | 'assignedTech'
+    @Value     int,             -- status id, or assigned-tech UserID
     @UTC       int
 AS
 BEGIN
@@ -32,38 +35,56 @@ BEGIN
 
     DECLARE @Now datetime = CASE WHEN @UTC = 1 THEN DATEADD(hh, 1, GETDATE()) ELSE GETDATE() END;
 
+    -- caller's authority + access level (same lookup as usp_Helpdesk_GetTickets)
+    DECLARE @AccessID int, @AuthorityUserID int;
+    SELECT @AuthorityUserID = a.AuthorityID,
+           @AccessID        = a.AuthorityAccessID
+    FROM dbo.tblAuthority a
+    JOIN dbo.tblUser b ON a.AuthorityID = b.AuthorityID
+    WHERE b.UserID = @UserID;
+
+    -- parse the id list
     DECLARE @Ids TABLE (TicketID int PRIMARY KEY);
     INSERT INTO @Ids (TicketID)
     SELECT DISTINCT TRY_CONVERT(int, value)
     FROM STRING_SPLIT(@TicketIDs, ',')
     WHERE TRY_CONVERT(int, value) IS NOT NULL;
 
+    -- scope: restricted users (AccessID = 0) may only touch their own authority's tickets
+    IF ISNULL(@AccessID, 1) = 0
+        DELETE i FROM @Ids i
+        WHERE NOT EXISTS (
+            SELECT 1 FROM dbo.tblTicket t
+            WHERE t.TicketID = i.TicketID AND t.AuthorityID = @AuthorityUserID);
+
+    -- ---------- STATUS ----------
     IF @Field = 'status'
     BEGIN
         DECLARE @ChangedS TABLE (TicketID int, OldStatusID int);
         INSERT INTO @ChangedS (TicketID, OldStatusID)
         SELECT t.TicketID, t.StatusID
-        FROM dbo.tblTicket t                                   -- (A)(B) verify
+        FROM dbo.tblTicket t
         JOIN @Ids i ON i.TicketID = t.TicketID
         WHERE ISNULL(t.StatusID, 0) <> @Value;
 
         UPDATE t
-        SET t.StatusID = @Value
-            -- (D) if a ticket close needs a date stamp, add e.g.:
-            -- , t.CloseDate = CASE WHEN @Value = 5 THEN @Now ELSE t.CloseDate END
+        SET t.StatusID       = @Value,
+            t.LastUpdateDate = @Now,
+            t.CloseDate      = CASE WHEN @Value = 3 THEN @Now ELSE t.CloseDate END   -- 3 = Closed (UpdateTicket)
         FROM dbo.tblTicket t
         JOIN @ChangedS c ON c.TicketID = t.TicketID;
 
         INSERT INTO tblHistory (TicketID, UserID, HistoryTxt, HistoryDate)
         SELECT c.TicketID, @UserID,
-               'Ticket ' + CAST(c.TicketID AS varchar) + ' - status updated from '
-                 + so.StatusDesc + ' to ' + sn.StatusDesc, @Now
+               'Ticket - status changed from ' + sFrom.StatusDesc + ' to ' + sTo.StatusDesc, @Now
         FROM @ChangedS c
-        JOIN tblStatusTicket so ON so.StatusID = c.OldStatusID  -- (C) verify table name
-        JOIN tblStatusTicket sn ON sn.StatusID = @Value;
+        JOIN tblStatus sFrom ON sFrom.StatusID = c.OldStatusID
+        JOIN tblStatus sTo   ON sTo.StatusID   = @Value;
 
         SELECT COUNT(*) AS Updated FROM @ChangedS;
     END
+
+    -- ---------- ASSIGNED TECH ----------
     ELSE IF @Field = 'assignedTech'
     BEGIN
         DECLARE @ChangedT TABLE (TicketID int, OldTechID int);
@@ -74,21 +95,23 @@ BEGIN
         WHERE ISNULL(t.AssignedTechID, 0) <> @Value;
 
         UPDATE t
-        SET t.AssignedTechID = @Value
+        SET t.AssignedTechID = @Value,
+            t.LastUpdateDate = @Now
         FROM dbo.tblTicket t
         JOIN @ChangedT c ON c.TicketID = t.TicketID;
 
         INSERT INTO tblHistory (TicketID, UserID, HistoryTxt, HistoryDate)
         SELECT c.TicketID, @UserID,
-               'Ticket ' + CAST(c.TicketID AS varchar) + ' - reassigned from '
-                 + (uo.UserFirstName + ' ' + uo.UserLastName) + ' to '
-                 + (un.UserFirstName + ' ' + un.UserLastName), @Now
+               'Ticket - reassigned from '
+                 + ISNULL(uo.UserFirstName + ' ' + uo.UserLastName, 'Unassigned') + ' to '
+                 + ISNULL(un.UserFirstName + ' ' + un.UserLastName, 'Unassigned'), @Now
         FROM @ChangedT c
-        JOIN tblUser uo ON uo.UserID = c.OldTechID
-        JOIN tblUser un ON un.UserID = @Value;
+        LEFT JOIN tblUser uo ON uo.UserID = c.OldTechID
+        LEFT JOIN tblUser un ON un.UserID = @Value;
 
         SELECT COUNT(*) AS Updated FROM @ChangedT;
     END
+
     ELSE
         THROW 50000, 'Field not permitted.', 1;
 END
